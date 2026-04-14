@@ -1,0 +1,26 @@
+@reference "../../../../styles/index.css";
+
+.wrapper {
+  @apply overflow-hidden rounded-[1.75rem] border border-border/70 bg-card/92;
+}
+
+.actionHead,
+.actionCell {
+  @apply w-[5rem] text-right;
+}
+
+.titleCell {
+  @apply py-4;
+}
+
+.titleGroup {
+  @apply flex flex-col gap-1;
+}
+
+.titleButton {
+  @apply w-fit text-left text-sm font-medium text-foreground transition-opacity hover:opacity-70;
+}
+
+.slug {
+  @apply text-xs text-muted-foreground;
+}

@@ -1,0 +1,42 @@
+@reference "../../../../styles/index.css";
+
+.wrapper {
+  @apply overflow-hidden rounded-[1.75rem] border border-border/70 bg-card/92;
+}
+
+.nameCell {
+  @apply py-4;
+}
+
+.nameGroup {
+  @apply flex flex-col gap-1;
+}
+
+.name {
+  @apply text-sm font-medium text-foreground;
+}
+
+.description {
+  @apply text-xs leading-6 text-muted-foreground;
+}
+
+.slug {
+  @apply text-sm text-muted-foreground;
+}
+
+.statusBadge {
+  @apply rounded-full border-0 px-3 py-1;
+}
+
+.visible {
+  @apply bg-[color-mix(in_oklch,var(--color-primary)_16%,white)] text-foreground;
+}
+
+.hidden {
+  @apply bg-muted text-muted-foreground;
+}
+
+.actionHead,
+.actionCell {
+  @apply w-[7rem] text-right;
+}

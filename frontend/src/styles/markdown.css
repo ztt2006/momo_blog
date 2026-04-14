@@ -1,0 +1,68 @@
+.markdown-body > * + * {
+  margin-top: 1rem;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4 {
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  color: var(--color-foreground);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.markdown-body h1 {
+  font-size: 2rem;
+}
+
+.markdown-body h2 {
+  font-size: 1.6rem;
+}
+
+.markdown-body h3 {
+  font-size: 1.25rem;
+}
+
+.markdown-body p,
+.markdown-body li {
+  color: color-mix(in oklch, var(--color-foreground) 78%, white);
+  font-size: 1rem;
+  line-height: 1.95;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 1.25rem;
+}
+
+.markdown-body code {
+  border: 1px solid color-mix(in oklch, var(--color-border) 85%, transparent);
+  background: color-mix(in oklch, var(--color-muted) 82%, white);
+  border-radius: 0.5rem;
+  padding: 0.12rem 0.36rem;
+  font-size: 0.9em;
+}
+
+.markdown-body pre {
+  overflow-x: auto;
+  border: 1px solid color-mix(in oklch, var(--color-border) 85%, transparent);
+  background: color-mix(in oklch, var(--color-foreground) 92%, white);
+  color: color-mix(in oklch, white 93%, var(--color-primary));
+  border-radius: 1.1rem;
+  padding: 1rem 1.15rem;
+}
+
+.markdown-body pre code {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.markdown-body blockquote {
+  border: 1px solid color-mix(in oklch, var(--color-border) 85%, transparent);
+  background: color-mix(in oklch, var(--color-accent) 50%, white);
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+}

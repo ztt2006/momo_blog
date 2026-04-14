@@ -1,0 +1,77 @@
+import { useEffect, useMemo, useState } from "react"
+import { useNavigate } from "react-router"
+import { toast } from "sonner"
+
+import Loading from "@/components/shared/loading"
+import PageHeader from "@/components/shared/pageHeader"
+import ArticleFilterBar from "@/features/article/components/articleFilterBar"
+import ArticleTable from "@/features/article/components/articleTable"
+import { getArticles } from "@/features/article/api"
+import styles from "@/pages/articleList/index.module.css"
+import { APP_ROUTES } from "@/lib/constants"
+import type { Article, ArticleListFilters } from "@/features/article/types"
+
+export default function ArticleListPage() {
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(true)
+  const [articles, setArticles] = useState<Article[]>([])
+  const [filters, setFilters] = useState<ArticleListFilters>({
+    keyword: "",
+    status: "all",
+  })
+
+  useEffect(() => {
+    getArticles()
+      .then((response) => {
+        setArticles(response.items)
+      })
+      .catch((error) => {
+        toast.error(error instanceof Error ? error.message : "获取文章列表失败")
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [])
+
+  const filteredItems = useMemo(() => {
+    const keyword = filters.keyword.trim().toLowerCase()
+
+    return articles.filter((article) => {
+      const matchesStatus = filters.status === "all" ? true : article.status === filters.status
+      const matchesKeyword =
+        !keyword ||
+        article.title.toLowerCase().includes(keyword) ||
+        article.slug.toLowerCase().includes(keyword) ||
+        article.summary?.toLowerCase().includes(keyword)
+
+      return matchesStatus && matchesKeyword
+    })
+  }, [articles, filters])
+
+  return (
+    <section className={styles.page}>
+      <PageHeader
+        eyebrow="Article Manager"
+        title="文章管理"
+        description="集中查看所有草稿和已发布内容，随时回到编辑状态。"
+      />
+
+      <ArticleFilterBar
+        filters={filters}
+        onKeywordChange={(keyword) => setFilters((current) => ({ ...current, keyword }))}
+        onStatusChange={(status) => setFilters((current) => ({ ...current, status }))}
+        onCreate={() => navigate(APP_ROUTES.articleCreate)}
+      />
+
+      {loading ? (
+        <Loading text="正在加载文章列表..." />
+      ) : (
+        <ArticleTable
+          items={filteredItems}
+          onCreate={() => navigate(APP_ROUTES.articleCreate)}
+          onEdit={(articleId) => navigate(`${APP_ROUTES.articles}/${articleId}/edit`)}
+        />
+      )}
+    </section>
+  )
+}

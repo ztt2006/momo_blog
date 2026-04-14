@@ -1,0 +1,9 @@
+@reference "../../../../styles/index.css";
+
+.meta {
+  @apply flex flex-wrap items-center gap-3 text-sm text-muted-foreground;
+}
+
+.meta span {
+  @apply rounded-full bg-muted/70 px-3 py-1;
+}

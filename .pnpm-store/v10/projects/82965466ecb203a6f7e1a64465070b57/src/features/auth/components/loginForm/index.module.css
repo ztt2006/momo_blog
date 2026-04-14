@@ -1,0 +1,49 @@
+@reference "../../../../styles/index.css";
+
+.card {
+  @apply w-full max-w-[29rem] rounded-[2rem] border-border/70 bg-card/92 shadow-[0_24px_80px_color-mix(in_oklch,var(--color-foreground)_8%,transparent)];
+}
+
+.header {
+  @apply flex flex-col gap-3 p-8 pb-5;
+}
+
+.badge {
+  @apply w-fit rounded-full bg-muted px-3 py-1 text-[0.72rem] font-medium uppercase tracking-[0.22em] text-muted-foreground;
+}
+
+.title {
+  @apply text-3xl font-semibold tracking-tight;
+}
+
+.description {
+  @apply text-sm leading-6 text-muted-foreground;
+}
+
+.content {
+  @apply p-8 pt-0;
+}
+
+.form {
+  @apply flex flex-col gap-5;
+}
+
+.field {
+  @apply flex flex-col gap-2;
+}
+
+.field :global(input) {
+  @apply h-12 rounded-2xl border-border/80 bg-background/85 px-4 shadow-none;
+}
+
+.submit {
+  @apply mt-2 h-12 rounded-2xl text-sm;
+}
+
+.loader {
+  @apply h-4 w-4 animate-spin;
+}
+
+.error {
+  @apply text-xs text-destructive;
+}

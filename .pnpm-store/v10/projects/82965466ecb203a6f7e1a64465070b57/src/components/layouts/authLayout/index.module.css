@@ -1,0 +1,39 @@
+@reference "../../../styles/index.css";
+
+.shell {
+  @apply relative min-h-svh overflow-hidden bg-background;
+}
+
+.grid {
+  @apply absolute inset-0 opacity-40;
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--color-border) 60%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--color-border) 60%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(180deg, black 0%, black 45%, transparent 100%);
+}
+
+.panel {
+  @apply relative mx-auto flex min-h-svh w-full max-w-6xl flex-col justify-between gap-10 px-6 py-10 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-10;
+}
+
+.brandBlock {
+  @apply flex max-w-[32rem] flex-col gap-5;
+}
+
+.kicker {
+  @apply text-xs font-medium uppercase tracking-[0.3em] text-muted-foreground;
+}
+
+.title {
+  font-family: "Georgia", "Times New Roman", serif;
+  @apply text-5xl font-semibold tracking-tight text-foreground;
+}
+
+.description {
+  @apply max-w-[32rem] text-base leading-8 text-muted-foreground;
+}
+
+.content {
+  @apply flex items-center justify-center;
+}

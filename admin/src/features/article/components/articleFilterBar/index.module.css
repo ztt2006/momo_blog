@@ -1,0 +1,29 @@
+@reference "../../../../styles/index.css";
+
+.card {
+  @apply rounded-[1.75rem] border-border/70 bg-card/88 px-4 py-4;
+}
+
+.inner {
+  @apply flex flex-col gap-3 lg:grid lg:grid-cols-[minmax(0,1fr)_12rem_auto];
+}
+
+.searchBox {
+  @apply relative;
+}
+
+.searchIcon {
+  @apply pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground;
+}
+
+.searchInput {
+  @apply h-11 rounded-2xl border-border/80 bg-background/85 pl-11 shadow-none;
+}
+
+.selectTrigger {
+  @apply h-11 rounded-2xl border-border/80 bg-background/85 shadow-none;
+}
+
+.createButton {
+  @apply h-11 rounded-2xl;
+}

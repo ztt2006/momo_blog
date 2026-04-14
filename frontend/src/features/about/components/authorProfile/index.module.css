@@ -1,0 +1,57 @@
+@reference "../../../../styles/index.css";
+
+.profile {
+  @apply grid gap-6 rounded-[2.4rem] bg-[linear-gradient(135deg,_color-mix(in_oklch,_var(--color-card)_86%,_white)_0%,_color-mix(in_oklch,_var(--color-accent)_42%,_white)_100%)] px-6 py-8 md:grid-cols-[6rem_minmax(0,1fr)] md:px-8;
+}
+
+.mark {
+  @apply flex h-18 w-18 items-center justify-center rounded-full bg-primary text-3xl font-semibold text-primary-foreground;
+}
+
+.copy {
+  @apply flex flex-col gap-4;
+}
+
+.name {
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  @apply text-4xl font-semibold tracking-tight;
+}
+
+.intro {
+  @apply max-w-[40rem] text-lg leading-8 text-[color-mix(in_oklch,var(--color-foreground)_82%,white)];
+}
+
+.description {
+  @apply max-w-[46rem] text-sm leading-8 text-muted-foreground;
+}
+@reference "../../../../styles/index.css";
+
+.profile {
+  @apply grid gap-8 border-t border-border/70 pt-8 lg:grid-cols-[15rem_minmax(0,1fr)];
+}
+
+.identity {
+  @apply flex flex-col gap-3;
+}
+
+.label {
+  @apply text-xs uppercase tracking-[0.22em] text-primary;
+}
+
+.name {
+  font-family: "Georgia", "Times New Roman", serif;
+  @apply text-4xl font-semibold tracking-tight text-foreground;
+}
+
+.copy {
+  @apply flex flex-col gap-5;
+}
+
+.intro {
+  font-family: "Georgia", "Times New Roman", serif;
+  @apply max-w-[46rem] text-2xl leading-10 text-foreground;
+}
+
+.description {
+  @apply max-w-[52rem] text-sm leading-8 text-muted-foreground;
+}

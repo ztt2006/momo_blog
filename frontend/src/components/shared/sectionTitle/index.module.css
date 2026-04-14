@@ -1,0 +1,25 @@
+@reference "../../../styles/index.css";
+
+.wrapper {
+  @apply flex flex-col gap-4 md:flex-row md:items-end md:justify-between;
+}
+
+.copy {
+  @apply flex max-w-[42rem] flex-col gap-2;
+}
+
+.eyebrow {
+  @apply text-xs uppercase tracking-[0.24em] text-muted-foreground;
+}
+
+.title {
+  @apply text-3xl font-semibold tracking-tight;
+}
+
+.description {
+  @apply text-sm leading-7 text-muted-foreground;
+}
+
+.action {
+  @apply flex items-center;
+}

@@ -1,0 +1,14 @@
+@reference "../../../styles/index.css";
+
+.wrapper {
+  @apply flex min-h-[32vh] flex-col items-center justify-center gap-4;
+}
+
+.dot {
+  @apply h-4 w-4 animate-pulse rounded-full bg-primary;
+  box-shadow: 0 0 0 12px color-mix(in oklch, var(--color-primary) 12%, transparent);
+}
+
+.text {
+  @apply text-sm text-muted-foreground;
+}

@@ -1,0 +1,30 @@
+@reference "../../styles/index.css";
+
+.page {
+  @apply flex flex-col gap-8;
+}
+
+.backRow {
+  @apply flex items-center;
+}
+
+.backButton {
+  @apply rounded-full;
+}
+
+.hero {
+  @apply flex flex-col gap-5 border-b border-border/80 pb-10;
+}
+
+.eyebrow {
+  @apply text-xs uppercase tracking-[0.28em] text-muted-foreground;
+}
+
+.title {
+  font-family: "Georgia", "Times New Roman", serif;
+  @apply max-w-[15ch] text-4xl font-semibold tracking-tight md:text-6xl;
+}
+
+.summary {
+  @apply max-w-[48rem] text-base leading-9 text-muted-foreground;
+}

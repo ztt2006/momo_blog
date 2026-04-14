@@ -1,0 +1,5 @@
+@reference "../../../../styles/index.css";
+
+.grid {
+  @apply grid gap-5 lg:grid-cols-2;
+}

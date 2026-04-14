@@ -1,0 +1,5 @@
+@reference "../../styles/index.css";
+
+.page {
+  @apply flex flex-col gap-7;
+}

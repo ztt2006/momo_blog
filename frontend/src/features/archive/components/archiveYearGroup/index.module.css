@@ -1,0 +1,61 @@
+@reference "../../../../styles/index.css";
+
+.group {
+  @apply grid gap-5 md:grid-cols-[7rem_minmax(0,1fr)];
+}
+
+.yearColumn {
+  @apply md:pt-3;
+}
+
+.year {
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  @apply text-4xl font-semibold tracking-tight text-foreground;
+}
+
+.entries {
+  @apply flex flex-col gap-4;
+}
+
+.entry {
+  @apply flex flex-col gap-3 rounded-[1.75rem] bg-card/88 px-5 py-5;
+}
+
+.title {
+  @apply text-xl font-semibold tracking-tight transition-opacity hover:opacity-70;
+}
+
+.summary {
+  @apply text-sm leading-7 text-muted-foreground;
+}
+@reference "../../../../styles/index.css";
+
+.group {
+  @apply grid gap-8 border-t border-border/70 pt-8 md:grid-cols-[7rem_minmax(0,1fr)];
+}
+
+.yearColumn {
+  @apply md:pt-1;
+}
+
+.year {
+  font-family: "Georgia", "Times New Roman", serif;
+  @apply text-3xl font-semibold tracking-tight text-foreground;
+}
+
+.entries {
+  @apply flex flex-col gap-6;
+}
+
+.entry {
+  @apply flex flex-col gap-3;
+}
+
+.title {
+  font-family: "Georgia", "Times New Roman", serif;
+  @apply text-xl font-semibold tracking-tight text-foreground transition-colors hover:text-primary;
+}
+
+.summary {
+  @apply max-w-[52rem] text-sm leading-8 text-muted-foreground;
+}

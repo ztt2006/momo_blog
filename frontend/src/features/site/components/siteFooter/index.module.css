@@ -1,0 +1,13 @@
+@reference "../../../../styles/index.css";
+
+.footer {
+  @apply flex flex-col gap-2 border-t border-border/70 px-1 py-8;
+}
+
+.title {
+  @apply text-sm font-semibold tracking-tight;
+}
+
+.text {
+  @apply text-sm leading-7 text-muted-foreground;
+}

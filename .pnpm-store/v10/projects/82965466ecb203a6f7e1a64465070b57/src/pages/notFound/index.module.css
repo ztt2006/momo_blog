@@ -1,0 +1,9 @@
+@reference "../../styles/index.css";
+
+.page {
+  @apply flex min-h-[50vh] flex-col items-start justify-center gap-4;
+}
+
+.link {
+  @apply text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline;
+}

@@ -1,0 +1,99 @@
+@reference "../../../../styles/index.css";
+
+.form {
+  @apply grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_23rem];
+}
+
+.mainColumn,
+.sideColumn {
+  @apply flex flex-col gap-6;
+}
+
+.card {
+  @apply rounded-[1.75rem] border-border/70;
+}
+
+.cardHeader {
+  @apply p-6 pb-3;
+}
+
+.cardTitle {
+  @apply text-lg font-semibold;
+}
+
+.cardDescription {
+  @apply text-sm leading-6 text-muted-foreground;
+}
+
+.cardContent {
+  @apply flex flex-col gap-5 p-6 pt-3;
+}
+
+.field {
+  @apply flex flex-col gap-2;
+}
+
+.input,
+.textarea {
+  @apply rounded-2xl border-border/80 bg-background/85 shadow-none;
+}
+
+.input {
+  @apply h-11;
+}
+
+.textarea {
+  @apply min-h-28 px-4 py-3;
+}
+
+.switchRow {
+  @apply flex items-center justify-between gap-4 rounded-2xl border border-border/70 bg-muted/35 px-4 py-3;
+}
+
+.switchCopy {
+  @apply flex flex-col gap-1;
+}
+
+.switchTitle {
+  @apply text-sm font-medium text-foreground;
+}
+
+.switchText {
+  @apply text-xs text-muted-foreground;
+}
+
+.error {
+  @apply text-xs text-destructive;
+}
+
+.helperText {
+  @apply text-xs leading-6 text-muted-foreground;
+}
+
+.tagGroup {
+  @apply flex flex-wrap gap-2;
+}
+
+.tagButton {
+  @apply flex min-w-[7.5rem] flex-col items-start gap-1 rounded-2xl border border-border/70 bg-background px-3 py-3 text-left transition-colors hover:border-primary/45 hover:bg-primary/5;
+}
+
+.tagButtonActive {
+  @apply border-primary/55 bg-primary/8;
+}
+
+.tagName {
+  @apply text-sm font-medium text-foreground;
+}
+
+.tagSlug {
+  @apply text-xs text-muted-foreground;
+}
+
+.actions {
+  @apply sticky bottom-4;
+}
+
+.submitButton {
+  @apply h-12 w-full rounded-2xl;
+}

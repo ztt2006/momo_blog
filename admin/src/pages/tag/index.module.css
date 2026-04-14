@@ -1,0 +1,14 @@
+@reference "../../styles/index.css";
+
+.page {
+  @apply flex flex-col gap-6;
+}
+
+.layout {
+  @apply grid gap-6 xl:grid-cols-[22rem_minmax(0,1fr)];
+}
+
+.formColumn,
+.listColumn {
+  @apply flex flex-col gap-6;
+}

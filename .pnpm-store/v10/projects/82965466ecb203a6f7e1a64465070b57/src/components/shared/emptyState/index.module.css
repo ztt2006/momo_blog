@@ -1,0 +1,25 @@
+@reference "../../../styles/index.css";
+
+.wrapper {
+  @apply flex flex-col items-start gap-5 rounded-[2rem] border border-border/70 bg-card/90 p-8 shadow-sm;
+}
+
+.iconBox {
+  @apply flex h-12 w-12 items-center justify-center rounded-2xl bg-muted text-foreground;
+}
+
+.iconBox :global(svg) {
+  @apply h-5 w-5;
+}
+
+.copy {
+  @apply flex max-w-[36rem] flex-col gap-2;
+}
+
+.title {
+  @apply text-xl font-semibold tracking-tight;
+}
+
+.description {
+  @apply text-sm leading-6 text-muted-foreground;
+}

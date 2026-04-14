@@ -1,0 +1,26 @@
+@reference "../../../../styles/index.css";
+
+.card {
+  @apply flex flex-col gap-4 border-t border-border/70 py-6;
+}
+
+.topLine {
+  @apply flex items-center gap-3 text-xs uppercase tracking-[0.22em] text-muted-foreground;
+}
+
+.dot {
+  @apply h-2 w-2 rounded-full bg-primary;
+}
+
+.body {
+  @apply flex flex-col gap-3;
+}
+
+.link {
+  font-family: "Georgia", "Times New Roman", serif;
+  @apply text-[1.7rem] font-semibold tracking-tight text-foreground transition-colors hover:text-primary;
+}
+
+.summary {
+  @apply text-sm leading-7 text-muted-foreground;
+}

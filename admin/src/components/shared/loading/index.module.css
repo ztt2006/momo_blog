@@ -1,0 +1,13 @@
+@reference "../../../styles/index.css";
+
+.wrapper {
+  @apply flex min-h-[40vh] flex-col items-center justify-center gap-4 text-center;
+}
+
+.spinner {
+  @apply h-10 w-10 animate-spin rounded-full border-2 border-border border-t-primary;
+}
+
+.text {
+  @apply text-sm text-muted-foreground;
+}

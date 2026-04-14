@@ -1,0 +1,22 @@
+@reference "../../../styles/index.css";
+
+.shell {
+  @apply relative min-h-svh overflow-hidden bg-background;
+}
+
+.background {
+  @apply pointer-events-none absolute inset-0;
+  background:
+    linear-gradient(to right, color-mix(in oklch, var(--color-border) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(180deg, color-mix(in oklch, var(--color-background) 98%, white) 0%, var(--color-background) 100%);
+  background-size: 48px 48px, auto;
+  mask-image: linear-gradient(180deg, black 0%, black 32%, transparent 100%);
+}
+
+.inner {
+  @apply relative mx-auto flex min-h-svh w-full max-w-[72rem] flex-col gap-12 px-5 py-6 md:px-8 md:py-8;
+}
+
+.content {
+  @apply flex flex-1 flex-col;
+}

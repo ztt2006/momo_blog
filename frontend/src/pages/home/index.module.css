@@ -1,0 +1,9 @@
+@reference "../../styles/index.css";
+
+.page {
+  @apply flex flex-col gap-8;
+}
+
+.section {
+  @apply flex flex-col gap-5;
+}

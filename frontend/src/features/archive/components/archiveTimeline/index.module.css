@@ -1,0 +1,10 @@
+@reference "../../../../styles/index.css";
+
+.timeline {
+  @apply flex flex-col gap-8;
+}
+@reference "../../../../styles/index.css";
+
+.timeline {
+  @apply flex flex-col gap-2;
+}

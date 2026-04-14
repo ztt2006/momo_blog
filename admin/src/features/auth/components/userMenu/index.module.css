@@ -1,0 +1,25 @@
+@reference "../../../../styles/index.css";
+
+.trigger {
+  @apply flex items-center gap-3 rounded-full border border-border/80 bg-card/80 px-2 py-2 text-left transition-colors hover:bg-muted;
+}
+
+.avatar {
+  @apply h-9 w-9;
+}
+
+.meta {
+  @apply hidden min-w-0 flex-col md:flex;
+}
+
+.name {
+  @apply truncate text-sm font-medium text-foreground;
+}
+
+.role {
+  @apply text-xs uppercase tracking-[0.16em] text-muted-foreground;
+}
+
+.menu {
+  @apply min-w-[11rem];
+}

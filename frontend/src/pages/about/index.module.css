@@ -1,0 +1,9 @@
+@reference "../../styles/index.css";
+
+.page {
+  @apply flex flex-col gap-7;
+}
+
+.grid {
+  @apply grid gap-5 lg:grid-cols-2;
+}
