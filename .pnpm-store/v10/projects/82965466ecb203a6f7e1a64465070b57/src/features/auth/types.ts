@@ -1,10 +1,12 @@
+export type AuthRole = "superadmin" | "admin" | "user"
+
 export interface AuthUser {
   id: number
   username: string
   email: string
   nickname: string | null
   avatar: string | null
-  role: string
+  role: AuthRole
   isActive: boolean
 }
 

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.orm import Session
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_admin_user
 from app.db.session import get_db
 from app.models.user import User
 from app.schemas.common import PaginatedResponse
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/admin/tags", tags=["admin-tags"])
 @router.get("", response_model=PaginatedResponse[TagResponse])
 def get_tags(
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    _: User = Depends(get_current_admin_user),
 ) -> PaginatedResponse[TagResponse]:
     items, total = list_tags_for_admin(db)
     return PaginatedResponse(total=total, items=items)
@@ -24,7 +24,7 @@ def get_tags(
 def create_tag(
     payload: TagCreate,
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    _: User = Depends(get_current_admin_user),
 ) -> TagResponse:
     return create_tag_for_admin(db, payload)
 
@@ -34,7 +34,7 @@ def update_tag_item(
     tag_id: int,
     payload: TagUpdate,
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    _: User = Depends(get_current_admin_user),
 ) -> TagResponse:
     return update_tag_for_admin(db, tag_id, payload)
 
@@ -43,7 +43,7 @@ def update_tag_item(
 def delete_tag_item(
     tag_id: int,
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    _: User = Depends(get_current_admin_user),
 ) -> Response:
     delete_tag_for_admin(db, tag_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

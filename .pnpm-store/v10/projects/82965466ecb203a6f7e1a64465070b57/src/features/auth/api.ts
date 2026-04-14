@@ -1,7 +1,7 @@
 import { AxiosError } from "axios"
 
 import { apiClient } from "@/api/client"
-import type { AuthUser, LoginPayload, LoginResponse } from "@/features/auth/types"
+import type { AuthRole, AuthUser, LoginPayload, LoginResponse } from "@/features/auth/types"
 import type { ApiErrorResponse } from "@/types/apiTypes"
 
 interface BackendAuthUser {
@@ -10,7 +10,7 @@ interface BackendAuthUser {
   email: string
   nickname: string | null
   avatar: string | null
-  role: string
+  role: AuthRole
   is_active: boolean
 }
 

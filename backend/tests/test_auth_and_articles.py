@@ -15,6 +15,7 @@ from app.db.base import Base
 from app.db.session import get_db
 from app.main import create_app
 from app.models.user import User
+from app.services.bootstrap_service import seed_demo_users
 
 
 class AuthAndArticleApiTests(unittest.TestCase):
@@ -53,8 +54,9 @@ class AuthAndArticleApiTests(unittest.TestCase):
             admin_user = User(
                 username="admin",
                 email="admin@example.com",
-                password_hash=get_password_hash("admin123"),
+                password_hash=get_password_hash("123456"),
                 nickname="Admin",
+                role="superadmin",
             )
             db.add(admin_user)
             db.commit()
@@ -69,13 +71,14 @@ class AuthAndArticleApiTests(unittest.TestCase):
     def test_login_and_get_current_user(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",
-            json={"username": "admin", "password": "admin123"},
+            json={"username": "admin", "password": "123456"},
         )
 
         self.assertEqual(login_response.status_code, 200)
         login_data = login_response.json()
         self.assertIn("access_token", login_data)
         self.assertEqual(login_data["user"]["username"], "admin")
+        self.assertEqual(login_data["user"]["role"], "superadmin")
 
         me_response = self.client.get(
             "/api/auth/me",
@@ -85,10 +88,162 @@ class AuthAndArticleApiTests(unittest.TestCase):
         self.assertEqual(me_response.status_code, 200)
         self.assertEqual(me_response.json()["username"], "admin")
 
+    def test_bootstrap_superadmin_is_created_when_missing(self) -> None:
+        with self.session_factory() as db:
+            db.query(User).delete()
+            db.commit()
+
+        login_response = self.client.post(
+            "/api/auth/login",
+            json={"username": "admin", "password": "123456"},
+        )
+
+        self.assertEqual(login_response.status_code, 200)
+        self.assertEqual(login_response.json()["user"]["role"], "superadmin")
+
+        with self.session_factory() as db:
+            users = db.query(User).all()
+
+        self.assertEqual(len(users), 1)
+        self.assertEqual(users[0].username, "admin")
+        self.assertEqual(users[0].role, "superadmin")
+
+    def test_public_user_registration_and_role_based_admin_access(self) -> None:
+        register_response = self.client.post(
+            "/api/auth/register",
+            json={
+                "username": "reader01",
+                "email": "reader01@example.com",
+                "password": "reader123",
+                "nickname": "Reader 01",
+            },
+        )
+
+        self.assertEqual(register_response.status_code, 201)
+        registered = register_response.json()
+        self.assertEqual(registered["user"]["username"], "reader01")
+        self.assertEqual(registered["user"]["role"], "user")
+
+        user_headers = {"Authorization": f"Bearer {registered['access_token']}"}
+        user_admin_response = self.client.get("/api/admin/articles", headers=user_headers)
+        self.assertEqual(user_admin_response.status_code, 403)
+
+        with self.session_factory() as db:
+            content_admin = User(
+                username="editor",
+                email="editor@example.com",
+                password_hash=get_password_hash("editor123"),
+                nickname="Editor",
+                role="admin",
+            )
+            db.add(content_admin)
+            db.commit()
+
+        admin_login_response = self.client.post(
+            "/api/auth/login",
+            json={"username": "editor", "password": "editor123"},
+        )
+        self.assertEqual(admin_login_response.status_code, 200)
+        self.assertEqual(admin_login_response.json()["user"]["role"], "admin")
+
+        admin_headers = {"Authorization": f"Bearer {admin_login_response.json()['access_token']}"}
+        admin_articles_response = self.client.get("/api/admin/articles", headers=admin_headers)
+        self.assertEqual(admin_articles_response.status_code, 200)
+
+    def test_superadmin_can_manage_users_but_cannot_create_second_superadmin(self) -> None:
+        login_response = self.client.post(
+            "/api/auth/login",
+            json={"username": "admin", "password": "123456"},
+        )
+        token = login_response.json()["access_token"]
+        headers = {"Authorization": f"Bearer {token}"}
+
+        list_response = self.client.get("/api/admin/users", headers=headers)
+        self.assertEqual(list_response.status_code, 200)
+        self.assertEqual(list_response.json()["total"], 1)
+        self.assertEqual(list_response.json()["items"][0]["role"], "superadmin")
+
+        invalid_create_response = self.client.post(
+            "/api/admin/users",
+            headers=headers,
+            json={
+                "username": "root2",
+                "email": "root2@example.com",
+                "password": "root2123",
+                "nickname": "Root Two",
+                "role": "superadmin",
+                "is_active": True,
+            },
+        )
+        self.assertEqual(invalid_create_response.status_code, 400)
+
+        create_response = self.client.post(
+            "/api/admin/users",
+            headers=headers,
+            json={
+                "username": "staff01",
+                "email": "staff01@example.com",
+                "password": "staff123",
+                "nickname": "Staff 01",
+                "role": "admin",
+                "is_active": True,
+            },
+        )
+        self.assertEqual(create_response.status_code, 201)
+        created_user = create_response.json()
+        self.assertEqual(created_user["role"], "admin")
+
+        update_response = self.client.put(
+            f"/api/admin/users/{created_user['id']}",
+            headers=headers,
+            json={
+                "email": "staff01@example.com",
+                "nickname": "Staff One",
+                "role": "user",
+                "is_active": False,
+                "password": None,
+            },
+        )
+        self.assertEqual(update_response.status_code, 200)
+        self.assertEqual(update_response.json()["role"], "user")
+        self.assertEqual(update_response.json()["is_active"], False)
+
+        delete_response = self.client.delete(f"/api/admin/users/{created_user['id']}", headers=headers)
+        self.assertEqual(delete_response.status_code, 204)
+
+        delete_superadmin_response = self.client.delete("/api/admin/users/1", headers=headers)
+        self.assertEqual(delete_superadmin_response.status_code, 400)
+
+    def test_seed_demo_users_creates_predictable_admin_and_user_accounts(self) -> None:
+        with self.session_factory() as db:
+            seeded_users = seed_demo_users(
+                db,
+                admin_count=2,
+                user_count=3,
+                inactive_user_count=1,
+                password="123456",
+            )
+
+            usernames = [user.username for user in seeded_users]
+            roles = {user.username: user.role for user in seeded_users}
+            statuses = {user.username: user.is_active for user in seeded_users}
+
+        self.assertEqual(len(seeded_users), 6)
+        self.assertIn("admin", usernames)
+        self.assertIn("admin01", usernames)
+        self.assertIn("admin02", usernames)
+        self.assertIn("user01", usernames)
+        self.assertIn("user03", usernames)
+        self.assertEqual(roles["admin"], "superadmin")
+        self.assertEqual(roles["admin01"], "admin")
+        self.assertEqual(roles["user01"], "user")
+        self.assertEqual(statuses["user01"], False)
+        self.assertEqual(statuses["user02"], True)
+
     def test_admin_article_crud_and_public_visibility(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",
-            json={"username": "admin", "password": "admin123"},
+            json={"username": "admin", "password": "123456"},
         )
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -145,7 +300,7 @@ class AuthAndArticleApiTests(unittest.TestCase):
     def test_admin_category_and_tag_crud_and_article_relation(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",
-            json={"username": "admin", "password": "admin123"},
+            json={"username": "admin", "password": "123456"},
         )
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -233,7 +388,7 @@ class AuthAndArticleApiTests(unittest.TestCase):
     def test_public_categories_and_tags_return_published_articles(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",
-            json={"username": "admin", "password": "admin123"},
+            json={"username": "admin", "password": "123456"},
         )
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -331,7 +486,7 @@ class AuthAndArticleApiTests(unittest.TestCase):
     def test_media_upload_and_cover_image_flow(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",
-            json={"username": "admin", "password": "admin123"},
+            json={"username": "admin", "password": "123456"},
         )
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -384,7 +539,7 @@ class AuthAndArticleApiTests(unittest.TestCase):
     def test_admin_and_public_site_settings_flow(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",
-            json={"username": "admin", "password": "admin123"},
+            json={"username": "admin", "password": "123456"},
         )
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -423,7 +578,7 @@ class AuthAndArticleApiTests(unittest.TestCase):
     def test_public_article_detail_navigation_and_seo_feeds(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",
-            json={"username": "admin", "password": "admin123"},
+            json={"username": "admin", "password": "123456"},
         )
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -531,7 +686,7 @@ class AuthAndArticleApiTests(unittest.TestCase):
     def test_public_article_comments_and_guestbook_messages(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",
-            json={"username": "admin", "password": "admin123"},
+            json={"username": "admin", "password": "123456"},
         )
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -619,7 +774,7 @@ class AuthAndArticleApiTests(unittest.TestCase):
     def test_admin_can_review_comments_and_hide_them_from_public(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",
-            json={"username": "admin", "password": "admin123"},
+            json={"username": "admin", "password": "123456"},
         )
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -695,7 +850,7 @@ class AuthAndArticleApiTests(unittest.TestCase):
     def test_admin_can_delete_article_and_related_comments(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",
-            json={"username": "admin", "password": "admin123"},
+            json={"username": "admin", "password": "123456"},
         )
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -745,7 +900,7 @@ class AuthAndArticleApiTests(unittest.TestCase):
     def test_admin_can_delete_category_without_deleting_article(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",
-            json={"username": "admin", "password": "admin123"},
+            json={"username": "admin", "password": "123456"},
         )
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -793,7 +948,7 @@ class AuthAndArticleApiTests(unittest.TestCase):
     def test_admin_can_delete_tag_without_deleting_article(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",
-            json={"username": "admin", "password": "admin123"},
+            json={"username": "admin", "password": "123456"},
         )
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -840,7 +995,7 @@ class AuthAndArticleApiTests(unittest.TestCase):
     def test_admin_can_delete_media_and_clear_article_cover(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",
-            json={"username": "admin", "password": "admin123"},
+            json={"username": "admin", "password": "123456"},
         )
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}

@@ -13,7 +13,8 @@ import MediaPage from "@/pages/media"
 import NotFoundPage from "@/pages/notFound"
 import SettingsPage from "@/pages/settings"
 import TagPage from "@/pages/tag"
-import { AuthGuard, GuestGuard } from "@/router/guards"
+import UsersPage from "@/pages/users"
+import { AuthGuard, GuestGuard, SuperadminGuard } from "@/router/guards"
 import { APP_ROUTES } from "@/lib/constants"
 
 export const router = createBrowserRouter([
@@ -64,6 +65,15 @@ export const router = createBrowserRouter([
           {
             path: APP_ROUTES.settings,
             element: <SettingsPage />,
+          },
+          {
+            element: <SuperadminGuard />,
+            children: [
+              {
+                path: APP_ROUTES.users,
+                element: <UsersPage />,
+              },
+            ],
           },
           {
             path: APP_ROUTES.articleCreate,

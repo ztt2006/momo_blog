@@ -25,6 +25,11 @@ function App() {
 
     getCurrentUser()
       .then((currentUser) => {
+        if (currentUser.role === "user") {
+          clearSession()
+          return
+        }
+
         setSession({
           token,
           user: currentUser,

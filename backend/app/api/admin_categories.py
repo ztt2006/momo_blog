@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.orm import Session
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_admin_user
 from app.db.session import get_db
 from app.models.user import User
 from app.schemas.category import CategoryCreate, CategoryResponse, CategoryUpdate
@@ -19,7 +19,7 @@ router = APIRouter(prefix="/admin/categories", tags=["admin-categories"])
 @router.get("", response_model=PaginatedResponse[CategoryResponse])
 def get_categories(
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    _: User = Depends(get_current_admin_user),
 ) -> PaginatedResponse[CategoryResponse]:
     items, total = list_categories_for_admin(db)
     return PaginatedResponse(total=total, items=items)
@@ -29,7 +29,7 @@ def get_categories(
 def create_category(
     payload: CategoryCreate,
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    _: User = Depends(get_current_admin_user),
 ) -> CategoryResponse:
     return create_category_for_admin(db, payload)
 
@@ -39,7 +39,7 @@ def update_category(
     category_id: int,
     payload: CategoryUpdate,
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    _: User = Depends(get_current_admin_user),
 ) -> CategoryResponse:
     return update_category_for_admin(db, category_id, payload)
 
@@ -48,7 +48,7 @@ def update_category(
 def delete_category_item(
     category_id: int,
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    _: User = Depends(get_current_admin_user),
 ) -> Response:
     delete_category_for_admin(db, category_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

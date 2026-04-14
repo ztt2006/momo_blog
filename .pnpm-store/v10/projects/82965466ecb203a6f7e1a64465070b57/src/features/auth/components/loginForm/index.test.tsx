@@ -59,4 +59,36 @@ describe("LoginForm", () => {
     expect(useAuthStore.getState().token).toBe("token-123")
     expect(navigateMock).toHaveBeenCalledWith("/articles", { replace: true })
   })
+
+  it("rejects frontend users from entering admin", async () => {
+    loginMock.mockResolvedValue({
+      accessToken: "token-user",
+      tokenType: "bearer",
+      user: {
+        id: 2,
+        username: "reader",
+        email: "reader@example.com",
+        nickname: "Reader",
+        avatar: null,
+        role: "user",
+        isActive: true,
+      },
+    })
+
+    render(<LoginForm />)
+
+    await userEvent.type(screen.getByLabelText("用户名"), "reader")
+    await userEvent.type(screen.getByLabelText("密码"), "reader123")
+    await userEvent.click(screen.getByRole("button", { name: "进入后台" }))
+
+    await waitFor(() => {
+      expect(loginMock).toHaveBeenCalledWith({
+        username: "reader",
+        password: "reader123",
+      })
+    })
+
+    expect(useAuthStore.getState().token).toBeNull()
+    expect(navigateMock).not.toHaveBeenCalled()
+  })
 })

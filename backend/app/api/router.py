@@ -7,6 +7,7 @@ from app.api import (
     admin_media,
     admin_site_settings,
     admin_tags,
+    admin_users,
     auth,
     public_articles,
     public_comments,
@@ -25,6 +26,7 @@ api_router.include_router(admin_tags.router)
 api_router.include_router(admin_comments.router)
 api_router.include_router(admin_media.router)
 api_router.include_router(admin_site_settings.router)
+api_router.include_router(admin_users.router)
 api_router.include_router(public_articles.router)
 api_router.include_router(public_comments.router)
 api_router.include_router(public_categories.router)

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_admin_user
 from app.db.session import get_db
 from app.models.user import User
 from app.schemas.site_setting import SiteSettingResponse, SiteSettingUpdate
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/admin/site-settings", tags=["admin-site-settings"])
 @router.get("", response_model=SiteSettingResponse)
 def get_site_settings(
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    _: User = Depends(get_current_admin_user),
 ) -> SiteSettingResponse:
     return get_site_setting_for_admin(db)
 
@@ -22,6 +22,6 @@ def get_site_settings(
 def update_site_settings(
     payload: SiteSettingUpdate,
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    _: User = Depends(get_current_admin_user),
 ) -> SiteSettingResponse:
     return update_site_setting_for_admin(db, payload)

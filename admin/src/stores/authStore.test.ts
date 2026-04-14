@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it } from "vitest"
 
+import type { AuthUser } from "@/features/auth/types"
 import { AUTH_STORAGE_KEYS } from "@/lib/constants"
 import { useAuthStore } from "@/stores/authStore"
 
-const demoUser = {
+const demoUser: AuthUser = {
   id: 1,
   username: "momo",
   email: "momo@example.com",

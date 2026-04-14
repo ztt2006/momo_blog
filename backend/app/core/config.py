@@ -33,6 +33,10 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 1440
     upload_dir: str = "uploads"
     site_url: str = "http://localhost:5173"
+    bootstrap_superadmin_username: str = "admin"
+    bootstrap_superadmin_password: str = "123456"
+    bootstrap_superadmin_email: str = "admin@example.com"
+    bootstrap_superadmin_nickname: str = "Admin"
 
     @property
     def cors_origins(self) -> list[str]:

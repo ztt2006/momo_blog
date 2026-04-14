@@ -36,6 +36,10 @@ export default function LoginForm() {
       setSubmitting(true)
       const response = await login(values)
 
+      if (response.user.role === "user") {
+        throw new Error("这个账号没有后台权限，请使用管理员账号登录")
+      }
+
       setSession({
         token: response.accessToken,
         user: response.user,

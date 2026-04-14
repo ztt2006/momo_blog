@@ -7,7 +7,14 @@ export const SITE_INFO = {
 
 export const PUBLIC_ROUTES = {
   home: "/",
+  login: "/login",
+  register: "/register",
   categories: "/categories",
   tags: "/tags",
   articleDetail: "/articles/:slug",
+} as const
+
+export const AUTH_STORAGE_KEYS = {
+  token: "momo_blog_public_token",
+  user: "momo_blog_public_user",
 } as const

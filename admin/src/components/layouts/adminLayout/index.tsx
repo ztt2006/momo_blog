@@ -1,4 +1,14 @@
-import { FileImage, FileText, FolderTree, LayoutDashboard, Menu, MessageSquareMore, Settings2, Tags } from "lucide-react"
+import {
+  FileImage,
+  FileText,
+  FolderTree,
+  LayoutDashboard,
+  Menu,
+  MessageSquareMore,
+  Settings2,
+  ShieldUser,
+  Tags,
+} from "lucide-react"
 import { NavLink, Outlet } from "react-router"
 
 import UserMenu from "@/features/auth/components/userMenu"
@@ -8,6 +18,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import styles from "@/components/layouts/adminLayout/index.module.css"
 import { classNames } from "@/lib/classNames"
 import { APP_ROUTES } from "@/lib/constants"
+import { useAuthStore } from "@/stores/authStore"
 
 const navItems = [
   { label: "仪表盘", to: APP_ROUTES.dashboard, icon: LayoutDashboard },
@@ -20,9 +31,15 @@ const navItems = [
 ]
 
 function Navigation({ mobile = false }: { mobile?: boolean }) {
+  const user = useAuthStore((state) => state.user)
+  const visibleItems =
+    user?.role === "superadmin"
+      ? [...navItems, { label: "用户管理", to: APP_ROUTES.users, icon: ShieldUser }]
+      : navItems
+
   return (
     <nav className={mobile ? styles.mobileNav : styles.nav}>
-      {navItems.map((item) => {
+      {visibleItems.map((item) => {
         const Icon = item.icon
 
         return (

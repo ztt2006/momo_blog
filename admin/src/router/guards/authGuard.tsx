@@ -7,6 +7,7 @@ import { useAuthStore } from "@/stores/authStore"
 export default function AuthGuard() {
   const location = useLocation()
   const token = useAuthStore((state) => state.token)
+  const user = useAuthStore((state) => state.user)
   const isHydrated = useAuthStore((state) => state.isHydrated)
 
   if (!isHydrated) {
@@ -14,6 +15,10 @@ export default function AuthGuard() {
   }
 
   if (!token) {
+    return <Navigate to={APP_ROUTES.login} replace state={{ from: location }} />
+  }
+
+  if (user?.role === "user") {
     return <Navigate to={APP_ROUTES.login} replace state={{ from: location }} />
   }
 

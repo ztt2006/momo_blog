@@ -1,0 +1,57 @@
+@reference "../../../../styles/index.css";
+
+.card {
+  @apply rounded-[1.75rem] border-border/70;
+}
+
+.cardHeader {
+  @apply p-6 pb-3;
+}
+
+.cardTitle {
+  @apply text-lg font-semibold;
+}
+
+.cardDescription {
+  @apply text-sm leading-6 text-muted-foreground;
+}
+
+.cardContent {
+  @apply p-6 pt-3;
+}
+
+.form {
+  @apply flex flex-col gap-5;
+}
+
+.field {
+  @apply flex flex-col gap-2;
+}
+
+.input {
+  @apply h-11 rounded-2xl border-border/80 bg-background/85 shadow-none;
+}
+
+.segmentField {
+  @apply flex flex-col gap-2;
+}
+
+.segmentLabel {
+  @apply text-sm font-medium text-foreground;
+}
+
+.segmentGroup {
+  @apply flex flex-wrap gap-3;
+}
+
+.actions {
+  @apply flex flex-wrap justify-end gap-3 pt-2;
+}
+
+.submitButton {
+  @apply min-w-28 rounded-2xl;
+}
+
+.error {
+  @apply text-xs text-destructive;
+}

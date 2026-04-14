@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.orm import Session
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_admin_user
 from app.db.session import get_db
 from app.models.user import User
 from app.schemas.article import ArticleAdminResponse, ArticleCreate, ArticleUpdate
@@ -44,7 +44,7 @@ def _serialize_admin_article(article) -> ArticleAdminResponse:
 @router.get("", response_model=PaginatedResponse[ArticleAdminResponse])
 def get_articles(
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    _: User = Depends(get_current_admin_user),
 ) -> PaginatedResponse[ArticleAdminResponse]:
     items, total = list_admin_articles(db)
     return PaginatedResponse(total=total, items=[_serialize_admin_article(item) for item in items])
@@ -54,7 +54,7 @@ def get_articles(
 def create_article(
     payload: ArticleCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_admin_user),
 ) -> ArticleAdminResponse:
     article = create_article_for_admin(db, payload, current_user)
     return _serialize_admin_article(article)
@@ -64,7 +64,7 @@ def create_article(
 def get_article(
     article_id: int,
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    _: User = Depends(get_current_admin_user),
 ) -> ArticleAdminResponse:
     article = get_admin_article_or_404(db, article_id)
     return _serialize_admin_article(article)
@@ -75,7 +75,7 @@ def update_article(
     article_id: int,
     payload: ArticleUpdate,
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    _: User = Depends(get_current_admin_user),
 ) -> ArticleAdminResponse:
     article = update_article_for_admin(db, article_id, payload)
     return _serialize_admin_article(article)
@@ -85,7 +85,7 @@ def update_article(
 def delete_article_item(
     article_id: int,
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_user),
+    _: User = Depends(get_current_admin_user),
 ) -> Response:
     delete_article_for_admin(db, article_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

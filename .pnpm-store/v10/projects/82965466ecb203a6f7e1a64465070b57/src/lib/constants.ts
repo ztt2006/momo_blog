@@ -12,5 +12,6 @@ export const APP_ROUTES = {
   categories: "/categories",
   tags: "/tags",
   media: "/media",
+  users: "/users",
   settings: "/settings",
 } as const

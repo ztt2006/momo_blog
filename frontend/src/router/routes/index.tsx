@@ -7,8 +7,12 @@ import ArchivePage from "@/pages/archive"
 import ArticleDetailPage from "@/pages/articleDetail"
 import CategoryPage from "@/pages/category"
 import HomePage from "@/pages/home"
+import LoginPage from "@/pages/login"
 import NotFoundPage from "@/pages/notFound"
+import RegisterPage from "@/pages/register"
 import TagPage from "@/pages/tag"
+import GuestOnlyGuard from "@/router/guards/guestOnlyGuard"
+import { PUBLIC_ROUTES } from "@/lib/constants"
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +37,19 @@ export const router = createBrowserRouter([
       {
         path: "/about",
         element: <AboutPage />,
+      },
+      {
+        element: <GuestOnlyGuard />,
+        children: [
+          {
+            path: PUBLIC_ROUTES.login,
+            element: <LoginPage />,
+          },
+          {
+            path: PUBLIC_ROUTES.register,
+            element: <RegisterPage />,
+          },
+        ],
       },
       {
         element: <ArticleLayout />,

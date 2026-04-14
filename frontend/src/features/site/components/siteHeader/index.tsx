@@ -2,6 +2,8 @@ import { Link, NavLink } from "react-router"
 
 import { Button } from "@/components/ui/button"
 import styles from "@/features/site/components/siteHeader/index.module.css"
+import { PUBLIC_ROUTES } from "@/lib/constants"
+import { usePublicAuthStore } from "@/stores/publicAuthStore"
 import { useSiteStore } from "@/stores/siteStore"
 
 const navItems = [
@@ -15,6 +17,8 @@ const navItems = [
 export default function SiteHeader() {
   const siteName = useSiteStore((state) => state.siteSetting.siteName)
   const siteSubtitle = useSiteStore((state) => state.siteSetting.siteSubtitle)
+  const user = usePublicAuthStore((state) => state.user)
+  const clearSession = usePublicAuthStore((state) => state.clearSession)
   const brandMark = siteName.trim().charAt(0).toUpperCase() || "M"
 
   return (
@@ -39,11 +43,25 @@ export default function SiteHeader() {
         ))}
       </nav>
 
-      <Button asChild className={styles.cta} variant="outline">
-        <a href="http://localhost:5174/login" target="_blank" rel="noreferrer">
-          进入后台
-        </a>
-      </Button>
+      <div className={styles.authBox}>
+        {user ? (
+          <>
+            <span className={styles.userName}>{user.nickname || user.username}</span>
+            <Button className={styles.cta} variant="outline" type="button" onClick={clearSession}>
+              退出登录
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button asChild className={styles.cta} variant="ghost">
+              <Link to={PUBLIC_ROUTES.login}>登录</Link>
+            </Button>
+            <Button asChild className={styles.cta} variant="outline">
+              <Link to={PUBLIC_ROUTES.register}>注册</Link>
+            </Button>
+          </>
+        )}
+      </div>
     </header>
   )
 }

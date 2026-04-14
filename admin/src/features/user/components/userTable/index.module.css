@@ -1,0 +1,55 @@
+@reference "../../../../styles/index.css";
+
+.wrapper {
+  @apply overflow-hidden rounded-[1.75rem] border border-border/70 bg-card/92;
+}
+
+.nameCell {
+  @apply py-4;
+}
+
+.nameGroup {
+  @apply flex flex-col gap-1;
+}
+
+.username {
+  @apply text-sm font-medium text-foreground;
+}
+
+.email,
+.nickname,
+.lockedText {
+  @apply text-xs text-muted-foreground;
+}
+
+.roleBadge,
+.activeBadge,
+.inactiveBadge {
+  @apply rounded-full border-0 px-3 py-1;
+}
+
+.roleBadge,
+.activeBadge {
+  @apply bg-[color-mix(in_oklch,var(--color-primary)_12%,white)] text-foreground;
+}
+
+.inactiveBadge {
+  @apply bg-muted text-muted-foreground;
+}
+
+.roleIcon {
+  @apply mr-1 size-3.5;
+}
+
+.actionHead,
+.actionCell {
+  @apply w-[14rem] text-right;
+}
+
+.actions {
+  @apply flex items-center justify-end gap-2;
+}
+
+.deleteButton {
+  @apply text-destructive hover:text-destructive;
+}

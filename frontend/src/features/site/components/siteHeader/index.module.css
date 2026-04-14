@@ -37,6 +37,14 @@
   @apply text-primary;
 }
 
+.authBox {
+  @apply flex items-center gap-3;
+}
+
+.userName {
+  @apply text-sm text-foreground;
+}
+
 .cta {
   @apply rounded-full border-primary/20 text-primary hover:bg-primary/6;
 }
