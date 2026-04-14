@@ -7,16 +7,19 @@ import MediaPage from "@/pages/media"
 
 const getMediaAssetsMock = vi.fn()
 const uploadMediaAssetMock = vi.fn()
+const deleteMediaAssetMock = vi.fn()
 
 vi.mock("@/features/media/api", () => ({
   getMediaAssets: (...args: unknown[]) => getMediaAssetsMock(...args),
   uploadMediaAsset: (...args: unknown[]) => uploadMediaAssetMock(...args),
+  deleteMediaAsset: (...args: unknown[]) => deleteMediaAssetMock(...args),
 }))
 
 describe("MediaPage", () => {
   beforeEach(() => {
     getMediaAssetsMock.mockReset()
     uploadMediaAssetMock.mockReset()
+    deleteMediaAssetMock.mockReset()
   })
 
   it("renders media assets and uploads a new image", async () => {
@@ -92,5 +95,48 @@ describe("MediaPage", () => {
     })
 
     expect(screen.getAllByText("New Image").length).toBeGreaterThan(0)
+  })
+
+  it("deletes the selected media asset after confirmation", async () => {
+    getMediaAssetsMock.mockResolvedValue({
+      total: 1,
+      items: [
+        {
+          id: 1,
+          filename: "cover-a.png",
+          originalName: "React Cover",
+          mimeType: "image/png",
+          fileSize: 1024,
+          storageType: "local",
+          fileUrl: "http://127.0.0.1:8000/uploads/cover-a.png",
+          width: 1600,
+          height: 900,
+          uploadedBy: 1,
+          createdAt: "2026-04-14T10:00:00Z",
+          updatedAt: "2026-04-14T10:00:00Z",
+        },
+      ],
+    })
+
+    deleteMediaAssetMock.mockResolvedValue(undefined)
+
+    render(
+      <MemoryRouter>
+        <MediaPage />
+      </MemoryRouter>
+    )
+
+    await waitFor(() => {
+      expect(screen.getAllByText("React Cover").length).toBeGreaterThan(0)
+    })
+
+    await userEvent.click(screen.getByRole("button", { name: "删除素材" }))
+    await userEvent.click(screen.getByRole("button", { name: "确认删除" }))
+
+    await waitFor(() => {
+      expect(deleteMediaAssetMock).toHaveBeenCalledWith(1)
+    })
+
+    expect(screen.queryByText("React Cover")).not.toBeInTheDocument()
   })
 })

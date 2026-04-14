@@ -119,3 +119,11 @@
 .copyButton {
   @apply w-fit rounded-full;
 }
+
+.detailActions {
+  @apply flex flex-wrap gap-3;
+}
+
+.deleteButton {
+  @apply rounded-full;
+}

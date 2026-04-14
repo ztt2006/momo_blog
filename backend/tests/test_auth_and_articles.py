@@ -692,6 +692,197 @@ class AuthAndArticleApiTests(unittest.TestCase):
         self.assertEqual(public_guestbook_messages.status_code, 200)
         self.assertEqual(public_guestbook_messages.json()["total"], 0)
 
+    def test_admin_can_delete_article_and_related_comments(self) -> None:
+        login_response = self.client.post(
+            "/api/auth/login",
+            json={"username": "admin", "password": "admin123"},
+        )
+        token = login_response.json()["access_token"]
+        headers = {"Authorization": f"Bearer {token}"}
+
+        create_article_response = self.client.post(
+            "/api/admin/articles",
+            json={
+                "title": "Delete Me",
+                "slug": "delete-me",
+                "summary": "Temporary article",
+                "content_md": "# Delete Me",
+                "status": "published",
+                "allow_comment": True,
+            },
+            headers=headers,
+        )
+        self.assertEqual(create_article_response.status_code, 201)
+        article = create_article_response.json()
+
+        comment_response = self.client.post(
+            "/api/public/articles/delete-me/comments",
+            json={
+                "author_name": "读者 F",
+                "author_email": "reader-f@example.com",
+                "content": "等会儿这篇文章会被删掉。",
+            },
+        )
+        self.assertEqual(comment_response.status_code, 201)
+
+        delete_response = self.client.delete(f"/api/admin/articles/{article['id']}", headers=headers)
+        self.assertEqual(delete_response.status_code, 204)
+
+        admin_detail_response = self.client.get(f"/api/admin/articles/{article['id']}", headers=headers)
+        self.assertEqual(admin_detail_response.status_code, 404)
+
+        public_detail_response = self.client.get("/api/public/articles/delete-me")
+        self.assertEqual(public_detail_response.status_code, 404)
+
+        admin_list_response = self.client.get("/api/admin/articles", headers=headers)
+        self.assertEqual(admin_list_response.status_code, 200)
+        self.assertEqual(admin_list_response.json()["total"], 0)
+
+        admin_comments_response = self.client.get("/api/admin/comments", headers=headers)
+        self.assertEqual(admin_comments_response.status_code, 200)
+        self.assertEqual(admin_comments_response.json()["total"], 0)
+
+    def test_admin_can_delete_category_without_deleting_article(self) -> None:
+        login_response = self.client.post(
+            "/api/auth/login",
+            json={"username": "admin", "password": "admin123"},
+        )
+        token = login_response.json()["access_token"]
+        headers = {"Authorization": f"Bearer {token}"}
+
+        category_response = self.client.post(
+            "/api/admin/categories",
+            json={
+                "name": "To Remove",
+                "slug": "to-remove",
+                "description": "Temporary category",
+                "sort_order": 1,
+                "is_visible": True,
+            },
+            headers=headers,
+        )
+        self.assertEqual(category_response.status_code, 201)
+        category = category_response.json()
+
+        article_response = self.client.post(
+            "/api/admin/articles",
+            json={
+                "title": "Category Bound",
+                "slug": "category-bound",
+                "summary": "Bound to a category",
+                "content_md": "# Category Bound",
+                "status": "published",
+                "category_id": category["id"],
+            },
+            headers=headers,
+        )
+        self.assertEqual(article_response.status_code, 201)
+        article = article_response.json()
+
+        delete_response = self.client.delete(f"/api/admin/categories/{category['id']}", headers=headers)
+        self.assertEqual(delete_response.status_code, 204)
+
+        category_list_response = self.client.get("/api/admin/categories", headers=headers)
+        self.assertEqual(category_list_response.status_code, 200)
+        self.assertEqual(category_list_response.json()["total"], 0)
+
+        article_detail_response = self.client.get(f"/api/admin/articles/{article['id']}", headers=headers)
+        self.assertEqual(article_detail_response.status_code, 200)
+        self.assertIsNone(article_detail_response.json()["category_id"])
+
+    def test_admin_can_delete_tag_without_deleting_article(self) -> None:
+        login_response = self.client.post(
+            "/api/auth/login",
+            json={"username": "admin", "password": "admin123"},
+        )
+        token = login_response.json()["access_token"]
+        headers = {"Authorization": f"Bearer {token}"}
+
+        tag_response = self.client.post(
+            "/api/admin/tags",
+            json={
+                "name": "To Remove",
+                "slug": "tag-to-remove",
+                "description": "Temporary tag",
+                "color": "#1d4ed8",
+            },
+            headers=headers,
+        )
+        self.assertEqual(tag_response.status_code, 201)
+        tag = tag_response.json()
+
+        article_response = self.client.post(
+            "/api/admin/articles",
+            json={
+                "title": "Tag Bound",
+                "slug": "tag-bound",
+                "summary": "Bound to a tag",
+                "content_md": "# Tag Bound",
+                "status": "published",
+                "tag_ids": [tag["id"]],
+            },
+            headers=headers,
+        )
+        self.assertEqual(article_response.status_code, 201)
+        article = article_response.json()
+
+        delete_response = self.client.delete(f"/api/admin/tags/{tag['id']}", headers=headers)
+        self.assertEqual(delete_response.status_code, 204)
+
+        tag_list_response = self.client.get("/api/admin/tags", headers=headers)
+        self.assertEqual(tag_list_response.status_code, 200)
+        self.assertEqual(tag_list_response.json()["total"], 0)
+
+        article_detail_response = self.client.get(f"/api/admin/articles/{article['id']}", headers=headers)
+        self.assertEqual(article_detail_response.status_code, 200)
+        self.assertEqual(article_detail_response.json()["tag_ids"], [])
+
+    def test_admin_can_delete_media_and_clear_article_cover(self) -> None:
+        login_response = self.client.post(
+            "/api/auth/login",
+            json={"username": "admin", "password": "admin123"},
+        )
+        token = login_response.json()["access_token"]
+        headers = {"Authorization": f"Bearer {token}"}
+
+        upload_response = self.client.post(
+            "/api/admin/media/upload",
+            headers=headers,
+            files={"file": ("delete-cover.png", b"fake-image-bytes", "image/png")},
+        )
+        self.assertEqual(upload_response.status_code, 201)
+        media = upload_response.json()
+        stored_file = Path(self.temp_upload_dir, media["filename"])
+        self.assertTrue(stored_file.exists())
+
+        article_response = self.client.post(
+            "/api/admin/articles",
+            json={
+                "title": "Media Bound",
+                "slug": "media-bound",
+                "summary": "Bound to a media asset",
+                "content_md": "# Media Bound",
+                "status": "published",
+                "cover_image_id": media["id"],
+            },
+            headers=headers,
+        )
+        self.assertEqual(article_response.status_code, 201)
+        article = article_response.json()
+
+        delete_response = self.client.delete(f"/api/admin/media/{media['id']}", headers=headers)
+        self.assertEqual(delete_response.status_code, 204)
+
+        media_list_response = self.client.get("/api/admin/media", headers=headers)
+        self.assertEqual(media_list_response.status_code, 200)
+        self.assertEqual(media_list_response.json()["total"], 0)
+        self.assertFalse(stored_file.exists())
+
+        article_detail_response = self.client.get(f"/api/admin/articles/{article['id']}", headers=headers)
+        self.assertEqual(article_detail_response.status_code, 200)
+        self.assertIsNone(article_detail_response.json()["cover_image_id"])
+        self.assertIsNone(article_detail_response.json()["cover_image_url"])
+
 
 if __name__ == "__main__":
     unittest.main()

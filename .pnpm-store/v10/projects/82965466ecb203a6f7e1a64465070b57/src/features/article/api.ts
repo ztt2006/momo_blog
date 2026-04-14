@@ -100,3 +100,8 @@ export async function updateArticle(articleId: number, payload: ArticleSubmitPay
 
   return normalizeArticle(data)
 }
+
+
+export async function deleteArticle(articleId: number): Promise<void> {
+  await apiClient.delete(`/admin/articles/${articleId}`)
+}

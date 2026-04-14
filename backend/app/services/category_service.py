@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.crud.category import (
     create_category,
+    delete_category,
     get_category_by_id,
     get_category_by_slug,
     list_categories,
@@ -71,3 +72,14 @@ def list_categories_for_public(db: Session) -> tuple[list[Category], int]:
         visible_items.append(category)
 
     return visible_items, len(visible_items)
+
+
+def delete_category_for_admin(db: Session, category_id: int) -> None:
+    category = get_category_by_id(db, category_id)
+    if category is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not found")
+
+    for article in list(category.articles):
+        article.category = None
+
+    delete_category(db, category)

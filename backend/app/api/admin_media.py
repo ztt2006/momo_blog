@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, File, UploadFile, status
+from fastapi import APIRouter, Depends, File, Response, UploadFile, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
@@ -6,7 +6,7 @@ from app.db.session import get_db
 from app.models.user import User
 from app.schemas.common import PaginatedResponse
 from app.schemas.media import MediaAssetResponse
-from app.services.media_service import create_media_asset_for_admin, list_media_assets_for_admin
+from app.services.media_service import create_media_asset_for_admin, delete_media_asset_for_admin, list_media_assets_for_admin
 
 router = APIRouter(prefix="/admin/media", tags=["admin-media"])
 
@@ -45,3 +45,13 @@ def upload_media_asset(
 ) -> MediaAssetResponse:
     media_asset = create_media_asset_for_admin(db, file, current_user)
     return _serialize_media_asset(media_asset)
+
+
+@router.delete("/{media_asset_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_media_asset_item(
+    media_asset_id: int,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+) -> Response:
+    delete_media_asset_for_admin(db, media_asset_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

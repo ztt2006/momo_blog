@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.crud.article import (
     create_article,
+    delete_article,
     get_article_by_id,
     get_article_by_slug,
     get_next_published_article,
@@ -159,6 +160,18 @@ def get_admin_article_or_404(db: Session, article_id: int) -> Article:
 
 def list_admin_articles(db: Session) -> tuple[list[Article], int]:
     return list_articles(db)
+
+
+def delete_article_for_admin(db: Session, article_id: int) -> None:
+    article = get_article_by_id(db, article_id)
+    if article is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Article not found")
+
+    article.tags = []
+    for comment in list(article.comments):
+        db.delete(comment)
+
+    delete_article(db, article)
 
 
 def list_public_articles(db: Session) -> tuple[list[Article], int]:

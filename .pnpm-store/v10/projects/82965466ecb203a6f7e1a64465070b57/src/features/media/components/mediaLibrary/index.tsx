@@ -1,14 +1,15 @@
-import { Copy, ImageIcon, Search } from "lucide-react"
+import { Copy, ImageIcon, Search, Trash2 } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { toast } from "sonner"
 
+import ConfirmDialog from "@/components/shared/confirmDialog"
 import EmptyState from "@/components/shared/emptyState"
 import Loading from "@/components/shared/loading"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { getMediaAssets, uploadMediaAsset } from "@/features/media/api"
+import { deleteMediaAsset, getMediaAssets, uploadMediaAsset } from "@/features/media/api"
 import MediaGrid from "@/features/media/components/mediaGrid"
 import UploadPanel from "@/features/media/components/uploadPanel"
 import styles from "@/features/media/components/mediaLibrary/index.module.css"
@@ -41,8 +42,10 @@ export default function MediaLibrary() {
   const [items, setItems] = useState<MediaAsset[]>([])
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [keyword, setKeyword] = useState("")
+  const [mediaToDelete, setMediaToDelete] = useState<MediaAsset | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -115,6 +118,34 @@ export default function MediaLibrary() {
       toast.success("媒体链接已复制")
     } catch {
       toast.error("复制失败，请手动复制链接")
+    }
+  }
+
+  async function handleDeleteSelectedMedia() {
+    if (!mediaToDelete) {
+      return
+    }
+
+    try {
+      setDeleting(true)
+      await deleteMediaAsset(mediaToDelete.id)
+      setItems((current) => {
+        const remaining = current.filter((item) => item.id !== mediaToDelete.id)
+        setSelectedId((currentSelectedId) => {
+          if (currentSelectedId !== mediaToDelete.id) {
+            return currentSelectedId
+          }
+
+          return remaining[0]?.id ?? null
+        })
+        return remaining
+      })
+      setMediaToDelete(null)
+      toast.success("媒体素材已删除")
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "删除媒体素材失败")
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -243,10 +274,21 @@ export default function MediaLibrary() {
                   <div className={styles.urlBox}>
                     <p className={styles.urlLabel}>文件链接</p>
                     <code className={styles.urlValue}>{selectedMedia.fileUrl}</code>
-                    <Button type="button" variant="outline" className={styles.copyButton} onClick={handleCopyUrl}>
-                      <Copy />
-                      复制链接
-                    </Button>
+                    <div className={styles.detailActions}>
+                      <Button type="button" variant="outline" className={styles.copyButton} onClick={handleCopyUrl}>
+                        <Copy />
+                        复制链接
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        className={styles.deleteButton}
+                        onClick={() => setMediaToDelete(selectedMedia)}
+                      >
+                        <Trash2 />
+                        删除素材
+                      </Button>
+                    </div>
                   </div>
                 ) : null}
               </div>
@@ -259,6 +301,23 @@ export default function MediaLibrary() {
           </CardContent>
         </Card>
       </div>
+
+      <ConfirmDialog
+        open={Boolean(mediaToDelete)}
+        title="删除这个媒体素材？"
+        description={
+          mediaToDelete
+            ? `素材「${mediaToDelete.originalName}」会从媒体库移除，已作为文章封面的引用也会一并解绑。`
+            : ""
+        }
+        loading={deleting}
+        onConfirm={handleDeleteSelectedMedia}
+        onOpenChange={(open) => {
+          if (!open && !deleting) {
+            setMediaToDelete(null)
+          }
+        }}
+      />
     </div>
   )
 }

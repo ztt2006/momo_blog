@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
@@ -6,7 +6,12 @@ from app.db.session import get_db
 from app.models.user import User
 from app.schemas.category import CategoryCreate, CategoryResponse, CategoryUpdate
 from app.schemas.common import PaginatedResponse
-from app.services.category_service import create_category_for_admin, list_categories_for_admin, update_category_for_admin
+from app.services.category_service import (
+    create_category_for_admin,
+    delete_category_for_admin,
+    list_categories_for_admin,
+    update_category_for_admin,
+)
 
 router = APIRouter(prefix="/admin/categories", tags=["admin-categories"])
 
@@ -37,3 +42,13 @@ def update_category(
     _: User = Depends(get_current_user),
 ) -> CategoryResponse:
     return update_category_for_admin(db, category_id, payload)
+
+
+@router.delete("/{category_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_category_item(
+    category_id: int,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+) -> Response:
+    delete_category_for_admin(db, category_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

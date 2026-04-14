@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
+import ConfirmDialog from "@/components/shared/confirmDialog"
 import Loading from "@/components/shared/loading"
 import PageHeader from "@/components/shared/pageHeader"
 import { Button } from "@/components/ui/button"
 import {
   createCategory,
+  deleteCategory,
   getCategories,
   updateCategory,
 } from "@/features/category/api"
@@ -24,8 +26,10 @@ function sortCategories(items: Category[]) {
 export default function CategoryPage() {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const [items, setItems] = useState<Category[]>([])
   const [editingCategory, setEditingCategory] = useState<Category>()
+  const [categoryToDelete, setCategoryToDelete] = useState<Category>()
 
   useEffect(() => {
     getCategories()
@@ -64,6 +68,27 @@ export default function CategoryPage() {
     }
   }
 
+  async function handleDeleteCategory() {
+    if (!categoryToDelete) {
+      return
+    }
+
+    try {
+      setDeleting(true)
+      await deleteCategory(categoryToDelete.id)
+      setItems((current) => current.filter((item) => item.id !== categoryToDelete.id))
+      if (editingCategory?.id === categoryToDelete.id) {
+        setEditingCategory(undefined)
+      }
+      setCategoryToDelete(undefined)
+      toast.success("分类已删除")
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "删除分类失败")
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   return (
     <section className={styles.page}>
       <PageHeader
@@ -98,10 +123,28 @@ export default function CategoryPage() {
               items={items}
               onEdit={(category) => setEditingCategory(category)}
               onCreate={() => setEditingCategory(undefined)}
+              onDelete={(category) => setCategoryToDelete(category)}
             />
           )}
         </div>
       </div>
+
+      <ConfirmDialog
+        open={Boolean(categoryToDelete)}
+        title="删除这个分类？"
+        description={
+          categoryToDelete
+            ? `分类「${categoryToDelete.name}」会从分类体系中移除，已关联文章会保留，但不再归属该分类。`
+            : ""
+        }
+        loading={deleting}
+        onConfirm={handleDeleteCategory}
+        onOpenChange={(open) => {
+          if (!open && !deleting) {
+            setCategoryToDelete(undefined)
+          }
+        }}
+      />
     </section>
   )
 }

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
+import ConfirmDialog from "@/components/shared/confirmDialog"
 import Loading from "@/components/shared/loading"
 import PageHeader from "@/components/shared/pageHeader"
 import { Button } from "@/components/ui/button"
-import { createTag, getTags, updateTag } from "@/features/tag/api"
+import { createTag, deleteTag, getTags, updateTag } from "@/features/tag/api"
 import TagForm from "@/features/tag/components/tagForm"
 import TagTable from "@/features/tag/components/tagTable"
 import styles from "@/pages/tag/index.module.css"
@@ -17,8 +18,10 @@ function sortTags(items: Tag[]) {
 export default function TagPage() {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const [items, setItems] = useState<Tag[]>([])
   const [editingTag, setEditingTag] = useState<Tag>()
+  const [tagToDelete, setTagToDelete] = useState<Tag>()
 
   useEffect(() => {
     getTags()
@@ -52,6 +55,27 @@ export default function TagPage() {
       toast.error(error instanceof Error ? error.message : "保存标签失败")
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  async function handleDeleteTag() {
+    if (!tagToDelete) {
+      return
+    }
+
+    try {
+      setDeleting(true)
+      await deleteTag(tagToDelete.id)
+      setItems((current) => sortTags(current.filter((item) => item.id !== tagToDelete.id)))
+      if (editingTag?.id === tagToDelete.id) {
+        setEditingTag(undefined)
+      }
+      setTagToDelete(undefined)
+      toast.success("标签已删除")
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "删除标签失败")
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -89,10 +113,28 @@ export default function TagPage() {
               items={items}
               onEdit={(tag) => setEditingTag(tag)}
               onCreate={() => setEditingTag(undefined)}
+              onDelete={(tag) => setTagToDelete(tag)}
             />
           )}
         </div>
       </div>
+
+      <ConfirmDialog
+        open={Boolean(tagToDelete)}
+        title="删除这个标签？"
+        description={
+          tagToDelete
+            ? `标签「${tagToDelete.name}」会从标签体系中移除，相关文章会保留，但不再关联这个标签。`
+            : ""
+        }
+        loading={deleting}
+        onConfirm={handleDeleteTag}
+        onOpenChange={(open) => {
+          if (!open && !deleting) {
+            setTagToDelete(undefined)
+          }
+        }}
+      />
     </section>
   )
 }

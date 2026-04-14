@@ -59,3 +59,8 @@ export async function updateCategory(categoryId: number, payload: CategorySubmit
 
   return normalizeCategory(data)
 }
+
+
+export async function deleteCategory(categoryId: number): Promise<void> {
+  await apiClient.delete(`/admin/categories/${categoryId}`)
+}

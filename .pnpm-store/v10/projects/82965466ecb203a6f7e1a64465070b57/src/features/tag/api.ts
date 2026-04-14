@@ -52,3 +52,8 @@ export async function updateTag(tagId: number, payload: TagSubmitPayload): Promi
   const { data } = await apiClient.put<BackendTag>(`/admin/tags/${tagId}`, toBackendPayload(payload))
   return normalizeTag(data)
 }
+
+
+export async function deleteTag(tagId: number): Promise<void> {
+  await apiClient.delete(`/admin/tags/${tagId}`)
+}

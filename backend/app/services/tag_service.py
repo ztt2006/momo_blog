@@ -1,7 +1,15 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.crud.tag import create_tag, get_tag_by_id, get_tag_by_slug, list_tags, list_tags_with_articles, update_tag
+from app.crud.tag import (
+    create_tag,
+    delete_tag,
+    get_tag_by_id,
+    get_tag_by_slug,
+    list_tags,
+    list_tags_with_articles,
+    update_tag,
+)
 from app.models.tag import Tag
 from app.schemas.tag import TagCreate, TagUpdate
 
@@ -61,3 +69,12 @@ def list_tags_for_public(db: Session) -> tuple[list[Tag], int]:
         visible_items.append(tag)
 
     return visible_items, len(visible_items)
+
+
+def delete_tag_for_admin(db: Session, tag_id: int) -> None:
+    tag = get_tag_by_id(db, tag_id)
+    if tag is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Tag not found")
+
+    tag.articles = []
+    delete_tag(db, tag)

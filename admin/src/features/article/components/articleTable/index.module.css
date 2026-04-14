@@ -24,3 +24,7 @@
 .slug {
   @apply text-xs text-muted-foreground;
 }
+
+.deleteItem {
+  @apply text-destructive focus:text-destructive;
+}

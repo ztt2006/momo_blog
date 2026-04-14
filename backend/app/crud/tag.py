@@ -42,3 +42,8 @@ def update_tag(db: Session, tag: Tag) -> Tag:
     db.commit()
     db.refresh(tag)
     return tag
+
+
+def delete_tag(db: Session, tag: Tag) -> None:
+    db.delete(tag)
+    db.commit()

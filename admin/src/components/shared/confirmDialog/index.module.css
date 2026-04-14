@@ -1,0 +1,9 @@
+@reference "../../../styles/index.css";
+
+.iconWrap {
+  @apply bg-destructive/10 text-destructive;
+}
+
+.icon {
+  @apply size-5;
+}

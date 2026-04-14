@@ -61,3 +61,8 @@ export async function uploadMediaAsset(file: File): Promise<MediaAsset> {
 
   return normalizeMediaAsset(data)
 }
+
+
+export async function deleteMediaAsset(mediaAssetId: number): Promise<void> {
+  await apiClient.delete(`/admin/media/${mediaAssetId}`)
+}

@@ -38,5 +38,13 @@
 
 .actionHead,
 .actionCell {
-  @apply w-[7rem] text-right;
+  @apply w-[12rem] text-right;
+}
+
+.actions {
+  @apply flex items-center justify-end gap-2;
+}
+
+.deleteButton {
+  @apply text-destructive hover:text-destructive;
 }

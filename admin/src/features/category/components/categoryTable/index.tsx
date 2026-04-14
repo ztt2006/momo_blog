@@ -1,4 +1,4 @@
-import { PencilLine } from "lucide-react"
+import { PencilLine, Trash2 } from "lucide-react"
 
 import EmptyState from "@/components/shared/emptyState"
 import { Badge } from "@/components/ui/badge"
@@ -19,9 +19,10 @@ interface CategoryTableProps {
   items: Category[]
   onEdit: (category: Category) => void
   onCreate: () => void
+  onDelete: (category: Category) => void
 }
 
-export default function CategoryTable({ items, onEdit, onCreate }: CategoryTableProps) {
+export default function CategoryTable({ items, onEdit, onCreate, onDelete }: CategoryTableProps) {
   if (!items.length) {
     return (
       <EmptyState
@@ -65,10 +66,16 @@ export default function CategoryTable({ items, onEdit, onCreate }: CategoryTable
                 </Badge>
               </TableCell>
               <TableCell className={styles.actionCell}>
-                <Button variant="ghost" size="sm" onClick={() => onEdit(item)}>
-                  <PencilLine />
-                  编辑
-                </Button>
+                <div className={styles.actions}>
+                  <Button variant="ghost" size="sm" onClick={() => onEdit(item)}>
+                    <PencilLine />
+                    编辑
+                  </Button>
+                  <Button variant="ghost" size="sm" className={styles.deleteButton} onClick={() => onDelete(item)}>
+                    <Trash2 />
+                    删除
+                  </Button>
+                </div>
               </TableCell>
             </TableRow>
           ))}

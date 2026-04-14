@@ -1,4 +1,4 @@
-import { MoreHorizontal, PencilLine } from "lucide-react"
+import { MoreHorizontal, PencilLine, Trash2 } from "lucide-react"
 
 import EmptyState from "@/components/shared/emptyState"
 import { Button } from "@/components/ui/button"
@@ -25,9 +25,10 @@ interface ArticleTableProps {
   items: Article[]
   onEdit: (articleId: number) => void
   onCreate: () => void
+  onDelete: (article: Article) => void
 }
 
-export default function ArticleTable({ items, onEdit, onCreate }: ArticleTableProps) {
+export default function ArticleTable({ items, onEdit, onCreate, onDelete }: ArticleTableProps) {
   if (!items.length) {
     return (
       <EmptyState
@@ -68,9 +69,13 @@ export default function ArticleTable({ items, onEdit, onCreate }: ArticleTablePr
               <TableCell>{formatDateTime(item.updatedAt)}</TableCell>
               <TableCell>{formatDateTime(item.publishedAt)}</TableCell>
               <TableCell className={styles.actionCell}>
-                <DropdownMenu>
+                  <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`文章 ${item.title} 的更多操作`}
+                    >
                       <MoreHorizontal />
                     </Button>
                   </DropdownMenuTrigger>
@@ -78,6 +83,13 @@ export default function ArticleTable({ items, onEdit, onCreate }: ArticleTablePr
                     <DropdownMenuItem onClick={() => onEdit(item.id)}>
                       <PencilLine />
                       编辑文章
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className={styles.deleteItem}
+                      onClick={() => onDelete(item)}
+                    >
+                      <Trash2 />
+                      删除文章
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

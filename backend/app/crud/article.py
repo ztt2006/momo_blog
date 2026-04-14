@@ -133,3 +133,8 @@ def update_article(db: Session, article: Article) -> Article:
     db.commit()
     db.refresh(article)
     return article
+
+
+def delete_article(db: Session, article: Article) -> None:
+    db.delete(article)
+    db.commit()

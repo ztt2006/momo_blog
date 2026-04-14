@@ -1,4 +1,4 @@
-import { PencilLine } from "lucide-react"
+import { PencilLine, Trash2 } from "lucide-react"
 
 import EmptyState from "@/components/shared/emptyState"
 import { Badge } from "@/components/ui/badge"
@@ -18,9 +18,10 @@ interface TagTableProps {
   items: Tag[]
   onEdit: (tag: Tag) => void
   onCreate: () => void
+  onDelete: (tag: Tag) => void
 }
 
-export default function TagTable({ items, onEdit, onCreate }: TagTableProps) {
+export default function TagTable({ items, onEdit, onCreate, onDelete }: TagTableProps) {
   if (!items.length) {
     return (
       <EmptyState
@@ -63,10 +64,16 @@ export default function TagTable({ items, onEdit, onCreate }: TagTableProps) {
                 )}
               </TableCell>
               <TableCell className={styles.actionCell}>
-                <Button variant="ghost" size="sm" onClick={() => onEdit(item)}>
-                  <PencilLine />
-                  编辑
-                </Button>
+                <div className={styles.actions}>
+                  <Button variant="ghost" size="sm" onClick={() => onEdit(item)}>
+                    <PencilLine />
+                    编辑
+                  </Button>
+                  <Button variant="ghost" size="sm" className={styles.deleteButton} onClick={() => onDelete(item)}>
+                    <Trash2 />
+                    删除
+                  </Button>
+                </div>
               </TableCell>
             </TableRow>
           ))}

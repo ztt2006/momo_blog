@@ -2,11 +2,12 @@ import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router"
 import { toast } from "sonner"
 
+import ConfirmDialog from "@/components/shared/confirmDialog"
 import Loading from "@/components/shared/loading"
 import PageHeader from "@/components/shared/pageHeader"
 import ArticleFilterBar from "@/features/article/components/articleFilterBar"
 import ArticleTable from "@/features/article/components/articleTable"
-import { getArticles } from "@/features/article/api"
+import { deleteArticle, getArticles } from "@/features/article/api"
 import styles from "@/pages/articleList/index.module.css"
 import { APP_ROUTES } from "@/lib/constants"
 import type { Article, ArticleListFilters } from "@/features/article/types"
@@ -14,7 +15,9 @@ import type { Article, ArticleListFilters } from "@/features/article/types"
 export default function ArticleListPage() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
+  const [deleting, setDeleting] = useState(false)
   const [articles, setArticles] = useState<Article[]>([])
+  const [articleToDelete, setArticleToDelete] = useState<Article | null>(null)
   const [filters, setFilters] = useState<ArticleListFilters>({
     keyword: "",
     status: "all",
@@ -48,6 +51,24 @@ export default function ArticleListPage() {
     })
   }, [articles, filters])
 
+  async function handleDeleteArticle() {
+    if (!articleToDelete) {
+      return
+    }
+
+    try {
+      setDeleting(true)
+      await deleteArticle(articleToDelete.id)
+      setArticles((current) => current.filter((item) => item.id !== articleToDelete.id))
+      setArticleToDelete(null)
+      toast.success("文章已删除")
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "删除文章失败")
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   return (
     <section className={styles.page}>
       <PageHeader
@@ -70,8 +91,26 @@ export default function ArticleListPage() {
           items={filteredItems}
           onCreate={() => navigate(APP_ROUTES.articleCreate)}
           onEdit={(articleId) => navigate(`${APP_ROUTES.articles}/${articleId}/edit`)}
+          onDelete={(article) => setArticleToDelete(article)}
         />
       )}
+
+      <ConfirmDialog
+        open={Boolean(articleToDelete)}
+        title="删除这篇文章？"
+        description={
+          articleToDelete
+            ? `《${articleToDelete.title}》会从后台和前台列表中移除，相关评论也会一起删除。`
+            : ""
+        }
+        loading={deleting}
+        onConfirm={handleDeleteArticle}
+        onOpenChange={(open) => {
+          if (!open && !deleting) {
+            setArticleToDelete(null)
+          }
+        }}
+      />
     </section>
   )
 }

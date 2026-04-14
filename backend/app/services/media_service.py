@@ -5,7 +5,7 @@ from fastapi import HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.crud.media_asset import create_media_asset, get_media_asset_by_id, list_media_assets
+from app.crud.media_asset import create_media_asset, delete_media_asset, get_media_asset_by_id, list_media_assets
 from app.models.media_asset import MediaAsset
 from app.models.user import User
 
@@ -52,3 +52,19 @@ def get_media_asset_or_none(db: Session, media_asset_id: int | None) -> MediaAss
     if media_asset_id is None:
         return None
     return get_media_asset_by_id(db, media_asset_id)
+
+
+def delete_media_asset_for_admin(db: Session, media_asset_id: int) -> None:
+    media_asset = get_media_asset_by_id(db, media_asset_id)
+    if media_asset is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Media asset not found")
+
+    file_path = Path(media_asset.file_path)
+
+    for article in list(media_asset.articles):
+        article.cover_image = None
+
+    delete_media_asset(db, media_asset)
+
+    if file_path.exists():
+        file_path.unlink()

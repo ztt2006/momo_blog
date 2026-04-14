@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
@@ -6,7 +6,7 @@ from app.db.session import get_db
 from app.models.user import User
 from app.schemas.common import PaginatedResponse
 from app.schemas.tag import TagCreate, TagResponse, TagUpdate
-from app.services.tag_service import create_tag_for_admin, list_tags_for_admin, update_tag_for_admin
+from app.services.tag_service import create_tag_for_admin, delete_tag_for_admin, list_tags_for_admin, update_tag_for_admin
 
 router = APIRouter(prefix="/admin/tags", tags=["admin-tags"])
 
@@ -37,3 +37,13 @@ def update_tag_item(
     _: User = Depends(get_current_user),
 ) -> TagResponse:
     return update_tag_for_admin(db, tag_id, payload)
+
+
+@router.delete("/{tag_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_tag_item(
+    tag_id: int,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+) -> Response:
+    delete_tag_for_admin(db, tag_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

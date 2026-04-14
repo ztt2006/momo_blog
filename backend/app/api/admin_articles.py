@@ -1,5 +1,4 @@
-from fastapi import APIRouter
-from fastapi import Depends, status
+from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
@@ -9,6 +8,7 @@ from app.schemas.article import ArticleAdminResponse, ArticleCreate, ArticleUpda
 from app.schemas.common import PaginatedResponse
 from app.services.article_service import (
     create_article_for_admin,
+    delete_article_for_admin,
     get_admin_article_or_404,
     list_admin_articles,
     update_article_for_admin,
@@ -79,3 +79,13 @@ def update_article(
 ) -> ArticleAdminResponse:
     article = update_article_for_admin(db, article_id, payload)
     return _serialize_admin_article(article)
+
+
+@router.delete("/{article_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_article_item(
+    article_id: int,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+) -> Response:
+    delete_article_for_admin(db, article_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
