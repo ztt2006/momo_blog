@@ -1,0 +1,17 @@
+@reference "../../../../styles/index.css";
+
+.nav {
+  @apply flex flex-wrap gap-3 rounded-[2rem] border border-border/75 bg-background/80 p-4;
+}
+
+.link {
+  @apply inline-flex items-center gap-2 rounded-full border border-border/70 px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-primary/35 hover:text-primary;
+}
+
+.name {
+  @apply font-medium text-foreground;
+}
+
+.count {
+  @apply text-xs;
+}

@@ -27,6 +27,9 @@ import {
 } from "@/features/article/schemas"
 import styles from "@/features/article/components/articleForm/index.module.css"
 import type { Article } from "@/features/article/types"
+import { getMediaAssets, uploadMediaAsset } from "@/features/media/api"
+import MediaPicker from "@/features/media/components/mediaPicker"
+import type { MediaAsset } from "@/features/media/types"
 import { getTags } from "@/features/tag/api"
 import { classNames } from "@/lib/classNames"
 import type { Category } from "@/features/category/types"
@@ -42,7 +45,9 @@ interface ArticleFormProps {
 export default function ArticleForm({ mode, article, submitting = false, onSubmit }: ArticleFormProps) {
   const [categories, setCategories] = useState<Category[]>([])
   const [tags, setTags] = useState<Tag[]>([])
+  const [mediaAssets, setMediaAssets] = useState<MediaAsset[]>([])
   const [taxonomyLoading, setTaxonomyLoading] = useState(true)
+  const [mediaUploading, setMediaUploading] = useState(false)
   const {
     register,
     control,
@@ -88,10 +93,49 @@ export default function ArticleForm({ mode, article, submitting = false, onSubmi
     }
   }, [])
 
+  useEffect(() => {
+    let cancelled = false
+
+    getMediaAssets()
+      .then((response) => {
+        if (!cancelled) {
+          setMediaAssets(response.items)
+        }
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          toast.error(error instanceof Error ? error.message : "获取媒体列表失败")
+        }
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   const title = watch("title")
   const summary = watch("summary")
   const contentMd = watch("contentMd")
+  const coverImageId = watch("coverImageId")
   const tagIds = watch("tagIds") ?? []
+  const selectedMedia =
+    mediaAssets.find((item) => item.id === coverImageId) ??
+    (article?.coverImageId && article.coverImageId === coverImageId && article.coverImageUrl
+      ? {
+          id: article.coverImageId,
+          filename: "",
+          originalName: article.title,
+          mimeType: "image/*",
+          fileSize: 0,
+          storageType: "local",
+          fileUrl: article.coverImageUrl,
+          width: null,
+          height: null,
+          uploadedBy: null,
+          createdAt: "",
+          updatedAt: "",
+        }
+      : null)
 
   function toggleTag(tagId: number) {
     const nextValue = tagIds.includes(tagId)
@@ -99,6 +143,20 @@ export default function ArticleForm({ mode, article, submitting = false, onSubmi
       : [...tagIds, tagId]
 
     setValue("tagIds", nextValue, { shouldDirty: true, shouldTouch: true })
+  }
+
+  async function handleMediaUpload(file: File) {
+    try {
+      setMediaUploading(true)
+      const uploaded = await uploadMediaAsset(file)
+      setMediaAssets((current) => [uploaded, ...current])
+      setValue("coverImageId", uploaded.id, { shouldDirty: true, shouldTouch: true })
+      toast.success("封面图片已上传")
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "上传图片失败")
+    } finally {
+      setMediaUploading(false)
+    }
   }
 
   return (
@@ -281,6 +339,35 @@ export default function ArticleForm({ mode, article, submitting = false, onSubmi
                 <p className={styles.helperText}>还没有标签，稍后可以去标签管理页创建。</p>
               )}
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className={styles.card}>
+          <CardHeader className={styles.cardHeader}>
+            <CardTitle className={styles.cardTitle}>封面图片</CardTitle>
+            <CardDescription className={styles.cardDescription}>
+              上传一张图片作为文章封面，前台首页和详情页会优先展示它。
+            </CardDescription>
+          </CardHeader>
+          <CardContent className={styles.cardContent}>
+            {selectedMedia?.fileUrl ? (
+              <div className={styles.coverPreview}>
+                <img className={styles.coverPreviewImage} src={selectedMedia.fileUrl} alt={title || selectedMedia.originalName} />
+              </div>
+            ) : (
+              <div className={styles.coverPlaceholder}>暂未选择封面</div>
+            )}
+
+            <MediaPicker
+              items={mediaAssets}
+              selectedId={coverImageId}
+              uploading={mediaUploading}
+              onSelect={(mediaAssetId) =>
+                setValue("coverImageId", mediaAssetId, { shouldDirty: true, shouldTouch: true })
+              }
+              onClear={() => setValue("coverImageId", null, { shouldDirty: true, shouldTouch: true })}
+              onUpload={handleMediaUpload}
+            />
           </CardContent>
         </Card>
 

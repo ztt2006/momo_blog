@@ -1,0 +1,13 @@
+@reference "../../../../styles/index.css";
+
+.cloud {
+  @apply flex flex-wrap gap-3 rounded-[2rem] border border-border/75 bg-background/80 p-4;
+}
+
+.item {
+  @apply inline-flex items-center gap-2;
+}
+
+.count {
+  @apply text-xs text-muted-foreground;
+}

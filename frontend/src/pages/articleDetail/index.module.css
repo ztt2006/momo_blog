@@ -28,3 +28,56 @@
 .summary {
   @apply max-w-[48rem] text-base leading-9 text-muted-foreground;
 }
+
+.coverFrame {
+  @apply overflow-hidden rounded-[2rem] border border-border/75;
+}
+
+.coverImage {
+  @apply h-[18rem] w-full object-cover md:h-[26rem];
+}
+
+.taxonomy {
+  @apply flex flex-col gap-4 pt-2;
+}
+
+.taxonomyBlock {
+  @apply flex flex-col gap-2;
+}
+
+.taxonomyLabel {
+  @apply text-xs uppercase tracking-[0.22em] text-muted-foreground;
+}
+
+.tagList {
+  @apply flex flex-wrap gap-2;
+}
+
+.contentLayout {
+  @apply grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.42fr)] xl:items-start;
+}
+
+.mainColumn {
+  @apply min-w-0;
+}
+
+.sideColumn {
+  @apply flex flex-col gap-4 xl:sticky xl:top-8;
+}
+
+.relatedSection {
+  @apply flex flex-col gap-5 border-t border-border/70 pt-8;
+}
+
+.relatedHeader {
+  @apply flex flex-col gap-2;
+}
+
+.relatedTitle {
+  font-family: "Georgia", "Times New Roman", serif;
+  @apply text-2xl font-semibold tracking-tight text-foreground;
+}
+
+.relatedGrid {
+  @apply grid gap-4 md:grid-cols-2 xl:grid-cols-3;
+}

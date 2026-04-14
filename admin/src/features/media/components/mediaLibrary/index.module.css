@@ -1,0 +1,121 @@
+@reference "../../../../styles/index.css";
+
+.layout {
+  @apply flex flex-col gap-6;
+}
+
+.metricGrid {
+  @apply grid gap-4 md:grid-cols-2;
+}
+
+.metricCard,
+.panelCard {
+  @apply rounded-[1.75rem] border-border/70 bg-background/95 shadow-sm;
+}
+
+.metricContent {
+  @apply flex items-start gap-4 p-6;
+}
+
+.metricValue {
+  font-family: "Georgia", "Times New Roman", serif;
+  @apply min-w-14 text-4xl font-semibold tracking-tight text-foreground;
+}
+
+.metricCopy {
+  @apply flex flex-col gap-1;
+}
+
+.metricLabel {
+  @apply text-sm font-medium text-foreground;
+}
+
+.metricHint {
+  @apply text-xs leading-6 text-muted-foreground;
+}
+
+.mainGrid {
+  @apply grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)];
+}
+
+.panelHeader {
+  @apply gap-2;
+}
+
+.panelTitle {
+  @apply text-lg font-semibold tracking-tight text-foreground;
+}
+
+.panelDescription {
+  @apply text-sm leading-7 text-muted-foreground;
+}
+
+.panelContent {
+  @apply flex flex-col gap-5 pt-1;
+}
+
+.toolbar {
+  @apply flex flex-col gap-4;
+}
+
+.searchBox {
+  @apply relative;
+}
+
+.searchIcon {
+  @apply pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground;
+}
+
+.searchInput {
+  @apply border-border/80 bg-background pl-9;
+}
+
+.detailPanel {
+  @apply flex flex-col gap-4;
+}
+
+.previewFrame {
+  @apply overflow-hidden rounded-[1.5rem] border border-border/70 bg-muted/20;
+}
+
+.previewImage,
+.previewPlaceholder {
+  @apply h-64 w-full object-cover;
+}
+
+.previewPlaceholder {
+  @apply flex items-center justify-center text-muted-foreground;
+}
+
+.detailHeader {
+  @apply flex items-center justify-between gap-3;
+}
+
+.fileName {
+  @apply text-sm font-medium text-foreground;
+}
+
+.detailList {
+  @apply flex flex-col gap-3 rounded-[1.25rem] border border-border/70 bg-muted/20 px-4 py-4;
+}
+
+.detailRow {
+  @apply flex items-start justify-between gap-3 text-sm text-foreground;
+}
+
+.detailCode,
+.urlValue {
+  @apply rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground;
+}
+
+.urlBox {
+  @apply flex flex-col gap-3 rounded-[1.25rem] border border-border/70 bg-background px-4 py-4;
+}
+
+.urlLabel {
+  @apply text-xs uppercase tracking-[0.18em] text-muted-foreground;
+}
+
+.copyButton {
+  @apply w-fit rounded-full;
+}

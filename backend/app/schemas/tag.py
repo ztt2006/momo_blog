@@ -24,3 +24,31 @@ class TagResponse(ORMModel):
     slug: str
     description: str | None = None
     color: str | None = None
+
+
+class TagPublicSummary(ORMModel):
+    id: int
+    name: str
+    slug: str
+    color: str | None = None
+
+
+class TagPublicArticleItem(ORMModel):
+    id: int
+    title: str
+    slug: str
+    summary: str | None = None
+    published_at: str | None = None
+    reading_time: int
+    word_count: int
+    cover_image_id: int | None = None
+
+
+class TagPublicItem(ORMModel):
+    id: int
+    name: str
+    slug: str
+    description: str | None = None
+    color: str | None = None
+    article_count: int
+    articles: list[TagPublicArticleItem] = Field(default_factory=list)

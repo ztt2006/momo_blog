@@ -26,3 +26,30 @@ class CategoryResponse(ORMModel):
     description: str | None = None
     sort_order: int
     is_visible: bool
+
+
+class CategoryPublicSummary(ORMModel):
+    id: int
+    name: str
+    slug: str
+
+
+class CategoryPublicArticleItem(ORMModel):
+    id: int
+    title: str
+    slug: str
+    summary: str | None = None
+    published_at: str | None = None
+    reading_time: int
+    word_count: int
+    cover_image_id: int | None = None
+
+
+class CategoryPublicItem(ORMModel):
+    id: int
+    name: str
+    slug: str
+    description: str | None = None
+    sort_order: int
+    article_count: int
+    articles: list[CategoryPublicArticleItem] = Field(default_factory=list)

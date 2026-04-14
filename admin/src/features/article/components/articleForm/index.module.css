@@ -90,6 +90,19 @@
   @apply text-xs text-muted-foreground;
 }
 
+.coverPreview,
+.coverPlaceholder {
+  @apply overflow-hidden rounded-[1.5rem] border border-border/75;
+}
+
+.coverPreviewImage {
+  @apply h-48 w-full object-cover;
+}
+
+.coverPlaceholder {
+  @apply flex h-36 items-center justify-center bg-muted/30 text-sm text-muted-foreground;
+}
+
 .actions {
   @apply sticky bottom-4;
 }

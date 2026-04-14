@@ -1,0 +1,36 @@
+@reference "../../../../styles/index.css";
+
+.card {
+  @apply flex flex-col gap-3 rounded-[1.5rem] border border-border/70 bg-background/95 px-5 py-5 shadow-sm;
+}
+
+.eyebrow {
+  @apply text-[11px] uppercase tracking-[0.24em] text-muted-foreground;
+}
+
+.title {
+  font-family: "Georgia", "Times New Roman", serif;
+  @apply text-base font-semibold tracking-tight text-foreground;
+}
+
+.nav {
+  @apply flex flex-col gap-1.5;
+}
+
+.link {
+  @apply text-sm leading-7 text-muted-foreground transition-colors hover:text-primary;
+}
+
+.link[data-level="2"] {
+  @apply pl-3;
+}
+
+.link[data-level="3"] {
+  @apply pl-6;
+}
+
+.link[data-level="4"],
+.link[data-level="5"],
+.link[data-level="6"] {
+  @apply pl-8;
+}

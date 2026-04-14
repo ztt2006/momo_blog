@@ -92,4 +92,41 @@ describe("article schemas", () => {
     expect(payload.categoryId).toBe(5)
     expect(payload.tagIds).toEqual([8, 9])
   })
+
+  it("preserves cover image in defaults and submit payload", () => {
+    const article: Article = {
+      id: 2,
+      title: "封面测试",
+      slug: "cover-test",
+      summary: null,
+      contentMd: "hello",
+      status: "draft",
+      categoryId: null,
+      coverImageId: 12,
+      authorId: 2,
+      seoTitle: null,
+      seoDescription: null,
+      seoKeywords: null,
+      isTop: false,
+      allowComment: true,
+      publishedAt: null,
+      createdAt: "2026-04-14T08:30:00.000Z",
+      updatedAt: "2026-04-14T08:30:00.000Z",
+      tagIds: [],
+    }
+
+    const defaults = getArticleFormDefaultValues(article)
+    expect(defaults.coverImageId).toBe(12)
+
+    const payload = createArticleSubmitPayload({
+      ...defaults,
+      title: "封面测试",
+      slug: "cover-test",
+      contentMd: "hello",
+      status: "draft",
+      coverImageId: 22,
+    })
+
+    expect(payload.coverImageId).toBe(22)
+  })
 })

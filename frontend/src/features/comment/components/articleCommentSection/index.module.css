@@ -1,0 +1,34 @@
+@reference "../../../../styles/index.css";
+
+.section {
+  @apply flex flex-col gap-5 border-t border-border/70 pt-8;
+}
+
+.header {
+  @apply flex flex-col gap-3 md:flex-row md:items-end md:justify-between;
+}
+
+.eyebrow {
+  @apply text-xs uppercase tracking-[0.24em] text-muted-foreground;
+}
+
+.copy {
+  @apply flex flex-1 flex-col gap-2;
+}
+
+.title {
+  font-family: "Georgia", "Times New Roman", serif;
+  @apply text-2xl font-semibold tracking-tight text-foreground;
+}
+
+.description {
+  @apply max-w-[42rem] text-sm leading-8 text-muted-foreground;
+}
+
+.count {
+  @apply text-sm text-muted-foreground;
+}
+
+.notice {
+  @apply rounded-[1.5rem] border border-border/70 bg-muted/20 px-5 py-4 text-sm leading-8 text-muted-foreground;
+}

@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     secret_key: str = "please-change-me"
     access_token_expire_minutes: int = 1440
     upload_dir: str = "uploads"
+    site_url: str = "http://localhost:5173"
 
     @property
     def cors_origins(self) -> list[str]:

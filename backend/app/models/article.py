@@ -38,3 +38,4 @@ class Article(PrimaryKeyMixin, TimestampMixin, Base):
         secondary="article_tags",
         back_populates="articles",
     )
+    comments: Mapped[list["Comment"]] = relationship(back_populates="article")

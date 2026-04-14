@@ -1,0 +1,63 @@
+@reference "../../../../styles/index.css";
+
+.card {
+  @apply border-border/80 bg-background/95;
+}
+
+.cardHeader {
+  @apply gap-2;
+}
+
+.cardTitle {
+  @apply text-lg font-semibold tracking-tight text-foreground;
+}
+
+.cardDescription {
+  @apply text-sm leading-7 text-muted-foreground;
+}
+
+.cardContent {
+  @apply pt-1;
+}
+
+.form {
+  @apply flex flex-col gap-5;
+}
+
+.field {
+  @apply flex flex-col gap-2;
+}
+
+.twoColumn {
+  @apply grid gap-5 md:grid-cols-2;
+}
+
+.input,
+.textarea,
+.markdownTextarea {
+  @apply border-border/80 bg-background;
+}
+
+.textarea {
+  @apply min-h-28;
+}
+
+.markdownTextarea {
+  @apply min-h-72 leading-7;
+}
+
+.helperText {
+  @apply text-xs leading-6 text-muted-foreground;
+}
+
+.error {
+  @apply text-sm text-destructive;
+}
+
+.actions {
+  @apply flex justify-end pt-2;
+}
+
+.submitButton {
+  @apply min-w-32;
+}

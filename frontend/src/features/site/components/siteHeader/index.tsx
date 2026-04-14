@@ -2,22 +2,28 @@ import { Link, NavLink } from "react-router"
 
 import { Button } from "@/components/ui/button"
 import styles from "@/features/site/components/siteHeader/index.module.css"
-import { SITE_INFO } from "@/lib/constants"
+import { useSiteStore } from "@/stores/siteStore"
 
 const navItems = [
   { label: "首页", to: "/" },
+  { label: "分类", to: "/categories" },
+  { label: "标签", to: "/tags" },
   { label: "归档", to: "/archive" },
   { label: "关于", to: "/about" },
 ]
 
 export default function SiteHeader() {
+  const siteName = useSiteStore((state) => state.siteSetting.siteName)
+  const siteSubtitle = useSiteStore((state) => state.siteSetting.siteSubtitle)
+  const brandMark = siteName.trim().charAt(0).toUpperCase() || "M"
+
   return (
     <header className={styles.header}>
       <Link className={styles.brand} to="/">
-        <span className={styles.mark}>M</span>
+        <span className={styles.mark}>{brandMark}</span>
         <span className={styles.copy}>
-          <strong className={styles.title}>{SITE_INFO.title}</strong>
-          <span className={styles.subtitle}>Personal notes</span>
+          <strong className={styles.title}>{siteName}</strong>
+          <span className={styles.subtitle}>{siteSubtitle || "Personal notes"}</span>
         </span>
       </Link>
 

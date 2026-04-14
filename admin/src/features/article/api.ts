@@ -1,5 +1,6 @@
 import { apiClient } from "@/api/client"
 import type { Article, ArticleSubmitPayload } from "@/features/article/types"
+import { resolveAssetUrl } from "@/lib/assetUrl"
 import type { PaginationResponse } from "@/types/paginationTypes"
 
 interface BackendArticle {
@@ -11,6 +12,7 @@ interface BackendArticle {
   status: "draft" | "published"
   category_id: number | null
   cover_image_id: number | null
+  cover_image_url: string | null
   author_id: number
   seo_title: string | null
   seo_description: string | null
@@ -38,6 +40,7 @@ function normalizeArticle(article: BackendArticle): Article {
     status: article.status,
     categoryId: article.category_id,
     coverImageId: article.cover_image_id,
+    coverImageUrl: resolveAssetUrl(article.cover_image_url),
     authorId: article.author_id,
     seoTitle: article.seo_title,
     seoDescription: article.seo_description,

@@ -1,4 +1,4 @@
-import { FileText, FolderTree, LayoutDashboard, Menu, Tags } from "lucide-react"
+import { FileImage, FileText, FolderTree, LayoutDashboard, Menu, MessageSquareMore, Settings2, Tags } from "lucide-react"
 import { NavLink, Outlet } from "react-router"
 
 import UserMenu from "@/features/auth/components/userMenu"
@@ -12,8 +12,11 @@ import { APP_ROUTES } from "@/lib/constants"
 const navItems = [
   { label: "仪表盘", to: APP_ROUTES.dashboard, icon: LayoutDashboard },
   { label: "文章", to: APP_ROUTES.articles, icon: FileText },
+  { label: "评论", to: APP_ROUTES.comments, icon: MessageSquareMore },
   { label: "分类", to: APP_ROUTES.categories, icon: FolderTree },
   { label: "标签", to: APP_ROUTES.tags, icon: Tags },
+  { label: "媒体库", to: APP_ROUTES.media, icon: FileImage },
+  { label: "设置", to: APP_ROUTES.settings, icon: Settings2 },
 ]
 
 function Navigation({ mobile = false }: { mobile?: boolean }) {

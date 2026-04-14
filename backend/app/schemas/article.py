@@ -2,7 +2,9 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
+from app.schemas.category import CategoryPublicSummary
 from app.schemas.common import ORMModel
+from app.schemas.tag import TagPublicSummary
 
 
 class ArticleBase(BaseModel):
@@ -38,6 +40,7 @@ class ArticleAdminResponse(ORMModel):
     status: str
     category_id: int | None = None
     cover_image_id: int | None = None
+    cover_image_url: str | None = None
     author_id: int
     seo_title: str | None = None
     seo_description: str | None = None
@@ -59,7 +62,21 @@ class ArticlePublicItem(ORMModel):
     reading_time: int
     word_count: int
     cover_image_id: int | None = None
+    cover_image_url: str | None = None
+
+
+class ArticleTocItem(BaseModel):
+    id: str
+    text: str
+    level: int
 
 
 class ArticlePublicDetail(ArticlePublicItem):
     content_md: str
+    category: CategoryPublicSummary | None = None
+    tags: list[TagPublicSummary] = Field(default_factory=list)
+    toc: list[ArticleTocItem] = Field(default_factory=list)
+    previous_article: ArticlePublicItem | None = None
+    next_article: ArticlePublicItem | None = None
+    related_articles: list[ArticlePublicItem] = Field(default_factory=list)
+    allow_comment: bool = True

@@ -41,6 +41,7 @@ class MetadataTests(unittest.TestCase):
             "tags",
             "articles",
             "article_tags",
+            "comments",
             "media_assets",
             "site_settings",
         }

@@ -1,0 +1,22 @@
+@reference "../../../../styles/index.css";
+
+.section {
+  @apply flex flex-col gap-5 rounded-[2rem] border border-border/70 bg-background/95 px-6 py-6 shadow-sm md:px-8;
+}
+
+.header {
+  @apply flex flex-col gap-2;
+}
+
+.eyebrow {
+  @apply text-xs uppercase tracking-[0.24em] text-muted-foreground;
+}
+
+.title {
+  font-family: "Georgia", "Times New Roman", serif;
+  @apply text-2xl font-semibold tracking-tight text-foreground;
+}
+
+.description {
+  @apply max-w-[44rem] text-sm leading-8 text-muted-foreground;
+}

@@ -1,0 +1,9 @@
+@reference "../../styles/index.css";
+
+.page {
+  @apply flex flex-col gap-6;
+}
+
+.grid {
+  @apply grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)] xl:items-start;
+}

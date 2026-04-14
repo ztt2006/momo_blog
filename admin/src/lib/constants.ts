@@ -8,6 +8,9 @@ export const APP_ROUTES = {
   dashboard: "/dashboard",
   articles: "/articles",
   articleCreate: "/articles/new",
+  comments: "/comments",
   categories: "/categories",
   tags: "/tags",
+  media: "/media",
+  settings: "/settings",
 } as const

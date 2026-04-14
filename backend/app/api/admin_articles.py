@@ -27,6 +27,7 @@ def _serialize_admin_article(article) -> ArticleAdminResponse:
         status=article.status,
         category_id=article.category_id,
         cover_image_id=article.cover_image_id,
+        cover_image_url=article.cover_image.file_url if article.cover_image else None,
         author_id=article.author_id,
         seo_title=article.seo_title,
         seo_description=article.seo_description,

@@ -4,6 +4,14 @@
   @apply flex flex-col gap-5 border-t border-border/80 pt-8;
 }
 
+.coverLink {
+  @apply block overflow-hidden rounded-[2rem];
+}
+
+.coverImage {
+  @apply h-[20rem] w-full object-cover;
+}
+
 .eyebrow {
   @apply text-xs uppercase tracking-[0.24em] text-muted-foreground;
 }

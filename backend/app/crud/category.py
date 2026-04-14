@@ -1,11 +1,23 @@
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
+from app.models.article import Article
 from app.models.category import Category
 
 
 def list_categories(db: Session) -> tuple[list[Category], int]:
     statement = select(Category).order_by(Category.sort_order.asc(), Category.id.asc())
+    items = list(db.scalars(statement))
+    return items, len(items)
+
+
+def list_visible_categories(db: Session) -> tuple[list[Category], int]:
+    statement = (
+        select(Category)
+        .options(selectinload(Category.articles))
+        .where(Category.is_visible.is_(True))
+        .order_by(Category.sort_order.asc(), Category.id.asc())
+    )
     items = list(db.scalars(statement))
     return items, len(items)
 

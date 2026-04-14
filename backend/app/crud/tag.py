@@ -1,11 +1,21 @@
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.models.tag import Tag
 
 
 def list_tags(db: Session) -> tuple[list[Tag], int]:
     statement = select(Tag).order_by(Tag.name.asc(), Tag.id.asc())
+    items = list(db.scalars(statement))
+    return items, len(items)
+
+
+def list_tags_with_articles(db: Session) -> tuple[list[Tag], int]:
+    statement = (
+        select(Tag)
+        .options(selectinload(Tag.articles))
+        .order_by(Tag.name.asc(), Tag.id.asc())
+    )
     items = list(db.scalars(statement))
     return items, len(items)
 

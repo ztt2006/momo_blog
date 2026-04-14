@@ -6,8 +6,10 @@ from app.crud.category import (
     get_category_by_id,
     get_category_by_slug,
     list_categories,
+    list_visible_categories,
     update_category,
 )
+from app.models.article import Article
 from app.models.category import Category
 from app.schemas.category import CategoryCreate, CategoryUpdate
 
@@ -45,3 +47,27 @@ def update_category_for_admin(db: Session, category_id: int, payload: CategoryUp
 
 def list_categories_for_admin(db: Session) -> tuple[list[Category], int]:
     return list_categories(db)
+
+
+def list_categories_for_public(db: Session) -> tuple[list[Category], int]:
+    categories, _ = list_visible_categories(db)
+
+    visible_items = []
+    for category in categories:
+        published_articles = [article for article in category.articles if article.status == "published"]
+        published_articles.sort(
+            key=lambda article: (
+                article.published_at is not None,
+                article.published_at or article.created_at,
+                article.created_at,
+            ),
+            reverse=True,
+        )
+
+        if not published_articles:
+            continue
+
+        category.articles = published_articles
+        visible_items.append(category)
+
+    return visible_items, len(visible_items)

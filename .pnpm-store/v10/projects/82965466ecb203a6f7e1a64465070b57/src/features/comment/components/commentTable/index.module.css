@@ -1,0 +1,58 @@
+@reference "../../../../styles/index.css";
+
+.wrapper {
+  @apply overflow-hidden rounded-[1.75rem] border border-border/70 bg-card/92;
+}
+
+.mainCell {
+  @apply min-w-[22rem] py-4 align-top whitespace-normal;
+}
+
+.authorBlock {
+  @apply flex flex-col gap-2;
+}
+
+.authorRow {
+  @apply flex flex-wrap items-center gap-2;
+}
+
+.authorName {
+  @apply text-sm font-medium text-foreground;
+}
+
+.authorEmail {
+  @apply text-xs text-muted-foreground;
+}
+
+.content {
+  @apply line-clamp-3 text-sm leading-7 text-muted-foreground;
+}
+
+.sourceCell {
+  @apply whitespace-normal align-top;
+}
+
+.sourceBlock {
+  @apply flex flex-col gap-1;
+}
+
+.sourceLabel {
+  @apply text-xs uppercase tracking-[0.16em] text-muted-foreground;
+}
+
+.articleTitle {
+  @apply text-sm text-foreground;
+}
+
+.actionHead,
+.actionCell {
+  @apply w-[12rem] text-right;
+}
+
+.actionGroup {
+  @apply ml-auto flex flex-wrap justify-end gap-2;
+}
+
+.actionButton {
+  @apply rounded-full;
+}

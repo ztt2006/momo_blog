@@ -3,15 +3,3 @@
 .page {
   @apply flex flex-col gap-6;
 }
-
-.card {
-  @apply rounded-[2rem] border-border/70;
-}
-
-.content {
-  @apply p-8;
-}
-
-.text {
-  @apply max-w-[46rem] text-sm leading-7 text-muted-foreground;
-}

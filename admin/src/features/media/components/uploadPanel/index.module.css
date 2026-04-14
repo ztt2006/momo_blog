@@ -1,0 +1,25 @@
+@reference "../../../../styles/index.css";
+
+.panel {
+  @apply flex cursor-pointer flex-col gap-4 rounded-2xl border border-dashed border-border/80 bg-muted/25 p-4 transition-colors hover:border-primary/35 hover:bg-primary/5;
+}
+
+.input {
+  @apply hidden;
+}
+
+.copy {
+  @apply flex flex-col gap-1;
+}
+
+.title {
+  @apply text-sm font-medium text-foreground;
+}
+
+.text {
+  @apply text-xs leading-6 text-muted-foreground;
+}
+
+.button {
+  @apply w-fit rounded-full;
+}

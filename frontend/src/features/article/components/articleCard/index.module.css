@@ -4,6 +4,14 @@
   @apply flex flex-col gap-4 border-t border-border/70 py-6;
 }
 
+.coverLink {
+  @apply block overflow-hidden rounded-[1.75rem];
+}
+
+.coverImage {
+  @apply h-52 w-full object-cover transition-transform duration-300 hover:scale-[1.02];
+}
+
 .topLine {
   @apply flex items-center gap-3 text-xs uppercase tracking-[0.22em] text-muted-foreground;
 }

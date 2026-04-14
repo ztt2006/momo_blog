@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.crud.tag import create_tag, get_tag_by_id, get_tag_by_slug, list_tags, update_tag
+from app.crud.tag import create_tag, get_tag_by_id, get_tag_by_slug, list_tags, list_tags_with_articles, update_tag
 from app.models.tag import Tag
 from app.schemas.tag import TagCreate, TagUpdate
 
@@ -37,3 +37,27 @@ def update_tag_for_admin(db: Session, tag_id: int, payload: TagUpdate) -> Tag:
 
 def list_tags_for_admin(db: Session) -> tuple[list[Tag], int]:
     return list_tags(db)
+
+
+def list_tags_for_public(db: Session) -> tuple[list[Tag], int]:
+    tags, _ = list_tags_with_articles(db)
+
+    visible_items = []
+    for tag in tags:
+        published_articles = [article for article in tag.articles if article.status == "published"]
+        published_articles.sort(
+            key=lambda article: (
+                article.published_at is not None,
+                article.published_at or article.created_at,
+                article.created_at,
+            ),
+            reverse=True,
+        )
+
+        if not published_articles:
+            continue
+
+        tag.articles = published_articles
+        visible_items.append(tag)
+
+    return visible_items, len(visible_items)

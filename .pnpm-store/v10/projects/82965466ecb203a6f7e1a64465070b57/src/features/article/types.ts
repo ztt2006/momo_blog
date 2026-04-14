@@ -9,6 +9,7 @@ export interface Article {
   status: ArticleStatus
   categoryId: number | null
   coverImageId: number | null
+  coverImageUrl?: string | null
   authorId: number
   seoTitle: string | null
   seoDescription: string | null

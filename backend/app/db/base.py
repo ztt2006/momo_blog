@@ -38,6 +38,7 @@ class PrimaryKeyMixin:
 from app.models import article  # noqa: E402,F401
 from app.models import article_tag  # noqa: E402,F401
 from app.models import category  # noqa: E402,F401
+from app.models import comment  # noqa: E402,F401
 from app.models import media_asset  # noqa: E402,F401
 from app.models import site_setting  # noqa: E402,F401
 from app.models import tag  # noqa: E402,F401

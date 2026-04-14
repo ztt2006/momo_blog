@@ -7,5 +7,7 @@ export const SITE_INFO = {
 
 export const PUBLIC_ROUTES = {
   home: "/",
+  categories: "/categories",
+  tags: "/tags",
   articleDetail: "/articles/:slug",
 } as const

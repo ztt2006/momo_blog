@@ -1,0 +1,25 @@
+@reference "../../../../styles/index.css";
+
+.wrapper {
+  @apply flex flex-col gap-4 rounded-[1.5rem] border border-border/70 bg-card/92 p-4 lg:flex-row lg:items-center lg:justify-between;
+}
+
+.searchBox {
+  @apply relative flex-1;
+}
+
+.searchIcon {
+  @apply pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground;
+}
+
+.searchInput {
+  @apply border-border/80 bg-background pl-9;
+}
+
+.selectGroup {
+  @apply flex flex-col gap-3 sm:flex-row;
+}
+
+.selectTrigger {
+  @apply min-w-36 bg-background;
+}

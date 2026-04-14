@@ -7,6 +7,11 @@ import type { PublicArticleItem } from "@/features/article/types"
 export default function FeaturedArticleCard({ article }: { article: PublicArticleItem }) {
   return (
     <article className={styles.card}>
+      {article.coverImageUrl ? (
+        <Link className={styles.coverLink} to={`/articles/${article.slug}`}>
+          <img className={styles.coverImage} src={article.coverImageUrl} alt={article.title} />
+        </Link>
+      ) : null}
       <span className={styles.eyebrow}>Featured note</span>
       <div className={styles.content}>
         <Link className={styles.title} to={`/articles/${article.slug}`}>

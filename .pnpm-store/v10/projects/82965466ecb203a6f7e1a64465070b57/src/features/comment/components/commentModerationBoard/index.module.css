@@ -1,0 +1,34 @@
+@reference "../../../../styles/index.css";
+
+.layout {
+  @apply flex flex-col gap-6;
+}
+
+.metricGrid {
+  @apply grid gap-4 md:grid-cols-2 xl:grid-cols-5;
+}
+
+.metricCard {
+  @apply rounded-[1.75rem] border-border/70 bg-background/95 shadow-sm;
+}
+
+.metricContent {
+  @apply flex items-start gap-4 p-6;
+}
+
+.metricValue {
+  font-family: "Georgia", "Times New Roman", serif;
+  @apply min-w-14 text-4xl font-semibold tracking-tight text-foreground;
+}
+
+.metricCopy {
+  @apply flex flex-col gap-1;
+}
+
+.metricLabel {
+  @apply text-sm font-medium text-foreground;
+}
+
+.metricHint {
+  @apply text-xs leading-6 text-muted-foreground;
+}
