@@ -6,6 +6,7 @@ export interface AuthUser {
   email: string
   nickname: string | null
   avatar: string | null
+  bio: string | null
   role: AuthRole
   isActive: boolean
 }

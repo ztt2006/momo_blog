@@ -2,6 +2,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react"
 import ReactMarkdown from "react-markdown"
 import rehypePrism from "rehype-prism-plus"
 
+import { resolveAssetUrl } from "@/lib/assetUrl"
 import { slugifyHeading } from "@/lib/markdown"
 import styles from "@/components/shared/markdownRenderer/index.module.css"
 
@@ -51,6 +52,15 @@ export default function MarkdownRenderer({ content }: { content: string }) {
         <ReactMarkdown
           rehypePlugins={[rehypePrism]}
           components={{
+            img: ({ node: _node, src, alt, ...props }) => {
+              const normalizedSrc = resolveAssetUrl(src)
+
+              if (!normalizedSrc) {
+                return null
+              }
+
+              return <img {...props} className={styles.image} src={normalizedSrc} alt={alt ?? ""} loading="lazy" />
+            },
             h1: ({ children, node: _node, ...props }) => (
               <Heading as="h1" id={resolveHeadingId(children)} {...props}>
                 {children}

@@ -9,6 +9,7 @@ export const PUBLIC_ROUTES = {
   home: "/",
   login: "/login",
   register: "/register",
+  profile: "/profile",
   categories: "/categories",
   tags: "/tags",
   articleDetail: "/articles/:slug",

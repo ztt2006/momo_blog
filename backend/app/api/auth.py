@@ -1,13 +1,16 @@
-from fastapi import APIRouter
-from fastapi import Depends
-from fastapi import status
+from fastapi import APIRouter, Depends, File, UploadFile, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
 from app.db.session import get_db
 from app.models.user import User
-from app.schemas.auth import LoginRequest, LoginResponse, RegisterRequest, UserResponse
-from app.services.auth_service import login_user, register_user
+from app.schemas.auth import LoginRequest, LoginResponse, ProfileUpdateRequest, RegisterRequest, UserResponse
+from app.services.auth_service import (
+    login_user,
+    register_user,
+    update_current_user_avatar,
+    update_current_user_profile,
+)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -25,3 +28,21 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)) -> LoginRe
 @router.get("/me", response_model=UserResponse)
 def me(current_user: User = Depends(get_current_user)) -> UserResponse:
     return current_user
+
+
+@router.put("/me", response_model=UserResponse)
+def update_me(
+    payload: ProfileUpdateRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> UserResponse:
+    return update_current_user_profile(db, current_user, payload)
+
+
+@router.post("/me/avatar", response_model=UserResponse)
+def upload_my_avatar(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> UserResponse:
+    return update_current_user_avatar(db, current_user, file)

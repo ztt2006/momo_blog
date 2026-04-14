@@ -9,9 +9,10 @@ import CategoryPage from "@/pages/category"
 import HomePage from "@/pages/home"
 import LoginPage from "@/pages/login"
 import NotFoundPage from "@/pages/notFound"
+import ProfilePage from "@/pages/profile"
 import RegisterPage from "@/pages/register"
 import TagPage from "@/pages/tag"
-import GuestOnlyGuard from "@/router/guards/guestOnlyGuard"
+import { AuthGuard, GuestOnlyGuard } from "@/router/guards"
 import { PUBLIC_ROUTES } from "@/lib/constants"
 
 export const router = createBrowserRouter([
@@ -37,6 +38,15 @@ export const router = createBrowserRouter([
       {
         path: "/about",
         element: <AboutPage />,
+      },
+      {
+        element: <AuthGuard />,
+        children: [
+          {
+            path: PUBLIC_ROUTES.profile,
+            element: <ProfilePage />,
+          },
+        ],
       },
       {
         element: <GuestOnlyGuard />,

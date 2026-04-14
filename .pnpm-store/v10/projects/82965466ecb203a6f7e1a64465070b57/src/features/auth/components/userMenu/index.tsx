@@ -1,14 +1,16 @@
-import { LogOut } from "lucide-react"
+import { LogOut, UserRound } from "lucide-react"
 import { useNavigate } from "react-router"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import styles from "@/features/auth/components/userMenu/index.module.css"
+import { resolveAssetUrl } from "@/lib/assetUrl"
 import { APP_ROUTES } from "@/lib/constants"
 import { useAuthStore } from "@/stores/authStore"
 
@@ -31,12 +33,14 @@ export default function UserMenu() {
   }
 
   const displayName = user.nickname || user.username
+  const avatarUrl = resolveAssetUrl(user.avatar)
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className={styles.trigger} type="button">
           <Avatar className={styles.avatar}>
+            {avatarUrl ? <AvatarImage src={avatarUrl} alt={displayName} /> : null}
             <AvatarFallback>{getInitials(displayName)}</AvatarFallback>
           </Avatar>
           <span className={styles.meta}>
@@ -46,6 +50,11 @@ export default function UserMenu() {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className={styles.menu}>
+        <DropdownMenuItem onClick={() => navigate(APP_ROUTES.profile)}>
+          <UserRound />
+          个人资料
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
             clearSession()

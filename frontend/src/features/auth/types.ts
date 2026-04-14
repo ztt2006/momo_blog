@@ -6,6 +6,7 @@ export interface PublicAuthUser {
   email: string
   nickname: string | null
   avatar: string | null
+  bio: string | null
   role: PublicAuthRole
   isActive: boolean
 }

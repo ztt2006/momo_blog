@@ -11,6 +11,7 @@ import DashboardPage from "@/pages/dashboard"
 import LoginPage from "@/pages/login"
 import MediaPage from "@/pages/media"
 import NotFoundPage from "@/pages/notFound"
+import ProfilePage from "@/pages/profile"
 import SettingsPage from "@/pages/settings"
 import TagPage from "@/pages/tag"
 import UsersPage from "@/pages/users"
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
           {
             path: APP_ROUTES.media,
             element: <MediaPage />,
+          },
+          {
+            path: APP_ROUTES.profile,
+            element: <ProfilePage />,
           },
           {
             path: APP_ROUTES.settings,

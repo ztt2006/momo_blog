@@ -41,6 +41,14 @@
   @apply flex items-center gap-3;
 }
 
+.userLink {
+  @apply inline-flex items-center gap-2 rounded-full px-2 py-1 text-sm text-foreground transition-colors hover:bg-muted/60;
+}
+
+.avatar {
+  @apply h-8 w-8;
+}
+
 .userName {
   @apply text-sm text-foreground;
 }

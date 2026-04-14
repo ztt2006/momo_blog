@@ -23,3 +23,7 @@
 .scrollArea {
   @apply h-[28rem] rounded-[1.5rem] border border-border/70 bg-background/80 p-5;
 }
+
+.image {
+  @apply my-6 block max-w-full rounded-2xl border border-border/70 bg-background object-contain shadow-sm;
+}

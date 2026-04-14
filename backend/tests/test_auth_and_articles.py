@@ -150,6 +150,75 @@ class AuthAndArticleApiTests(unittest.TestCase):
         admin_articles_response = self.client.get("/api/admin/articles", headers=admin_headers)
         self.assertEqual(admin_articles_response.status_code, 200)
 
+    def test_authenticated_user_can_update_own_profile_and_avatar(self) -> None:
+        register_response = self.client.post(
+            "/api/auth/register",
+            json={
+                "username": "reader02",
+                "email": "reader02@example.com",
+                "password": "reader123",
+                "nickname": "Reader 02",
+            },
+        )
+        self.assertEqual(register_response.status_code, 201)
+        token = register_response.json()["access_token"]
+        headers = {"Authorization": f"Bearer {token}"}
+
+        update_response = self.client.put(
+            "/api/auth/me",
+            headers=headers,
+            json={
+                "email": "reader02+updated@example.com",
+                "nickname": "Reader Updated",
+                "bio": "记录学习中的点滴进展。",
+                "password": "reader456",
+            },
+        )
+        self.assertEqual(update_response.status_code, 200)
+        updated_user = update_response.json()
+        self.assertEqual(updated_user["email"], "reader02+updated@example.com")
+        self.assertEqual(updated_user["nickname"], "Reader Updated")
+        self.assertEqual(updated_user["bio"], "记录学习中的点滴进展。")
+
+        avatar_response = self.client.post(
+            "/api/auth/me/avatar",
+            headers=headers,
+            files={"file": ("profile.png", b"avatar-image-bytes", "image/png")},
+        )
+        self.assertEqual(avatar_response.status_code, 200)
+        avatar_user = avatar_response.json()
+        self.assertTrue(avatar_user["avatar"].startswith("/uploads/"))
+
+        avatar_filename = avatar_user["avatar"].removeprefix("/uploads/")
+        avatar_path = Path(self.temp_upload_dir, avatar_filename)
+        self.assertTrue(avatar_path.exists())
+
+        relogin_response = self.client.post(
+            "/api/auth/login",
+            json={"username": "reader02", "password": "reader456"},
+        )
+        self.assertEqual(relogin_response.status_code, 200)
+        self.assertEqual(relogin_response.json()["user"]["avatar"], avatar_user["avatar"])
+        self.assertEqual(relogin_response.json()["user"]["bio"], "记录学习中的点滴进展。")
+
+    def test_profile_update_requires_authentication(self) -> None:
+        update_response = self.client.put(
+            "/api/auth/me",
+            json={
+                "email": "anonymous@example.com",
+                "nickname": "Anonymous",
+                "bio": None,
+                "password": None,
+            },
+        )
+        self.assertEqual(update_response.status_code, 401)
+
+        avatar_response = self.client.post(
+            "/api/auth/me/avatar",
+            files={"file": ("profile.png", b"avatar-image-bytes", "image/png")},
+        )
+        self.assertEqual(avatar_response.status_code, 401)
+
     def test_superadmin_can_manage_users_but_cannot_create_second_superadmin(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",

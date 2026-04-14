@@ -159,6 +159,18 @@ export default function ArticleForm({ mode, article, submitting = false, onSubmi
     }
   }
 
+  async function handleEditorImagePaste(file: File) {
+    const uploaded = await uploadMediaAsset(file)
+    setMediaAssets((current) => [uploaded, ...current])
+
+    const altText = uploaded.originalName
+      .replace(/\.[^/.]+$/, "")
+      .trim() || "image"
+    const markdownUrl = `/uploads/${uploaded.filename}`
+
+    return `![${altText}](${markdownUrl})`
+  }
+
   return (
     <form
       className={styles.form}
@@ -205,6 +217,7 @@ export default function ArticleForm({ mode, article, submitting = false, onSubmi
               description="支持标题、列表、引用、代码块等常见 Markdown 语法。"
               placeholder="从这里开始写作..."
               error={errors.contentMd?.message}
+              onImagePaste={handleEditorImagePaste}
               {...register("contentMd")}
             />
           </CardContent>

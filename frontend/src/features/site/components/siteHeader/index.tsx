@@ -1,7 +1,9 @@
 import { Link, NavLink } from "react-router"
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import styles from "@/features/site/components/siteHeader/index.module.css"
+import { resolveAssetUrl } from "@/lib/assetUrl"
 import { PUBLIC_ROUTES } from "@/lib/constants"
 import { usePublicAuthStore } from "@/stores/publicAuthStore"
 import { useSiteStore } from "@/stores/siteStore"
@@ -20,6 +22,8 @@ export default function SiteHeader() {
   const user = usePublicAuthStore((state) => state.user)
   const clearSession = usePublicAuthStore((state) => state.clearSession)
   const brandMark = siteName.trim().charAt(0).toUpperCase() || "M"
+  const displayName = user?.nickname || user?.username || ""
+  const avatarUrl = resolveAssetUrl(user?.avatar)
 
   return (
     <header className={styles.header}>
@@ -46,7 +50,16 @@ export default function SiteHeader() {
       <div className={styles.authBox}>
         {user ? (
           <>
-            <span className={styles.userName}>{user.nickname || user.username}</span>
+            <Link className={styles.userLink} to={PUBLIC_ROUTES.profile}>
+              <Avatar className={styles.avatar} size="sm">
+                {avatarUrl ? <AvatarImage src={avatarUrl} alt={displayName} /> : null}
+                <AvatarFallback>{displayName.slice(0, 1).toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <span className={styles.userName}>{displayName}</span>
+            </Link>
+            <Button asChild className={styles.cta} variant="ghost">
+              <Link to={PUBLIC_ROUTES.profile}>个人资料</Link>
+            </Button>
             <Button className={styles.cta} variant="outline" type="button" onClick={clearSession}>
               退出登录
             </Button>

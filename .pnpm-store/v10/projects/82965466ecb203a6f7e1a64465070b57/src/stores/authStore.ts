@@ -9,6 +9,7 @@ interface AuthState {
   user: AuthUser | null
   isHydrated: boolean
   setSession: (session: AuthSession) => void
+  setUser: (user: AuthUser) => void
   clearSession: () => void
   hydrate: () => void
 }
@@ -25,6 +26,10 @@ export const useAuthStore = create<AuthState>((set) => ({
       user,
       isHydrated: true,
     })
+  },
+  setUser: (user) => {
+    setStorageItem(AUTH_STORAGE_KEYS.user, user)
+    set({ user })
   },
   clearSession: () => {
     removeStorageItem(AUTH_STORAGE_KEYS.token)

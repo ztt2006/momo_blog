@@ -12,6 +12,7 @@ export const APP_ROUTES = {
   categories: "/categories",
   tags: "/tags",
   media: "/media",
+  profile: "/profile",
   users: "/users",
   settings: "/settings",
 } as const

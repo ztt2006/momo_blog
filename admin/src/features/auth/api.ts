@@ -10,6 +10,7 @@ interface BackendAuthUser {
   email: string
   nickname: string | null
   avatar: string | null
+  bio: string | null
   role: AuthRole
   is_active: boolean
 }
@@ -27,6 +28,7 @@ function normalizeUser(user: BackendAuthUser): AuthUser {
     email: user.email,
     nickname: user.nickname,
     avatar: user.avatar,
+    bio: user.bio,
     role: user.role,
     isActive: user.is_active,
   }

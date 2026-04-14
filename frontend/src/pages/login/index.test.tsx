@@ -39,6 +39,7 @@ describe("PublicLoginPage", () => {
         email: "reader01@example.com",
         nickname: "Reader 01",
         avatar: null,
+        bio: null,
         role: "user",
         isActive: true,
       },

@@ -10,6 +10,7 @@ const demoUser: AuthUser = {
   email: "momo@example.com",
   nickname: "Momo",
   avatar: null,
+  bio: null,
   role: "admin",
   isActive: true,
 }

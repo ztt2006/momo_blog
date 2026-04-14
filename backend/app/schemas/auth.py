@@ -16,12 +16,20 @@ class RegisterRequest(BaseModel):
     nickname: str | None = Field(default=None, max_length=100)
 
 
+class ProfileUpdateRequest(BaseModel):
+    email: str = Field(min_length=5, max_length=255)
+    nickname: str | None = Field(default=None, max_length=100)
+    bio: str | None = Field(default=None, max_length=2000)
+    password: str | None = Field(default=None, min_length=6, max_length=128)
+
+
 class UserResponse(ORMModel):
     id: int
     username: str
     email: str
     nickname: str | None = None
     avatar: str | None = None
+    bio: str | None = None
     role: str
     is_active: bool
 

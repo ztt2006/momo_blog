@@ -1,0 +1,22 @@
+@reference "../../styles/index.css";
+
+.page {
+  @apply mx-auto flex w-full max-w-4xl flex-col gap-8 py-8;
+}
+
+.header {
+  @apply flex flex-col gap-3;
+}
+
+.eyebrow {
+  @apply text-xs uppercase tracking-[0.2em] text-primary;
+}
+
+.title {
+  font-family: "Georgia", "Times New Roman", serif;
+  @apply text-3xl font-semibold tracking-tight text-foreground;
+}
+
+.description {
+  @apply max-w-2xl text-sm leading-7 text-muted-foreground;
+}

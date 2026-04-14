@@ -3,3 +3,7 @@
 .wrapper {
   @apply rounded-[2rem] bg-card/80 px-6 py-8 shadow-sm md:px-10;
 }
+
+.image {
+  @apply my-6 block max-w-full rounded-2xl border border-border/70 bg-background object-contain shadow-sm;
+}

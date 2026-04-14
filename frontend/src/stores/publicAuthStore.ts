@@ -9,6 +9,7 @@ interface PublicAuthState {
   user: PublicAuthUser | null
   isHydrated: boolean
   setSession: (session: PublicAuthSession) => void
+  setUser: (user: PublicAuthUser) => void
   clearSession: () => void
   hydrate: () => void
 }
@@ -27,6 +28,10 @@ export const usePublicAuthStore = create<PublicAuthState>((set) => ({
       user,
       isHydrated: true,
     })
+  },
+  setUser: (user) => {
+    setStorageItem(AUTH_STORAGE_KEYS.user, user)
+    set({ user })
   },
   clearSession: () => {
     removeStorageItem(AUTH_STORAGE_KEYS.token)

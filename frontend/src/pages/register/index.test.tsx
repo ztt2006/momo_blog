@@ -39,6 +39,7 @@ describe("PublicRegisterPage", () => {
         email: "newreader@example.com",
         nickname: "New Reader",
         avatar: null,
+        bio: null,
         role: "user",
         isActive: true,
       },

@@ -3,6 +3,7 @@ import rehypePrism from "rehype-prism-plus"
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { resolveAssetUrl } from "@/lib/assetUrl"
 import styles from "@/features/article/components/articlePreviewPanel/index.module.css"
 
 interface ArticlePreviewPanelProps {
@@ -29,7 +30,30 @@ export default function ArticlePreviewPanel({
           <article className="markdown-body">
             <h1>{title || "文章标题预览"}</h1>
             {summary ? <p>{summary}</p> : null}
-            <ReactMarkdown rehypePlugins={[rehypePrism]}>{contentMd || "开始输入正文..."}</ReactMarkdown>
+            <ReactMarkdown
+              rehypePlugins={[rehypePrism]}
+              components={{
+                img: ({ node: _node, src, alt, ...props }) => {
+                  const normalizedSrc = resolveAssetUrl(src)
+
+                  if (!normalizedSrc) {
+                    return null
+                  }
+
+                  return (
+                    <img
+                      {...props}
+                      className={styles.image}
+                      src={normalizedSrc}
+                      alt={alt ?? ""}
+                      loading="lazy"
+                    />
+                  )
+                },
+              }}
+            >
+              {contentMd || "开始输入正文..."}
+            </ReactMarkdown>
           </article>
         </ScrollArea>
       </CardContent>
