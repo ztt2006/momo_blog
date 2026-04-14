@@ -240,6 +240,18 @@ class AuthAndArticleApiTests(unittest.TestCase):
         self.assertEqual(statuses["user01"], False)
         self.assertEqual(statuses["user02"], True)
 
+    def test_cors_allows_any_origin_preflight_request(self) -> None:
+        response = self.client.options(
+            "/api/public/site-settings",
+            headers={
+                "Origin": "https://www.momo-blog.xztxnb.cn",
+                "Access-Control-Request-Method": "GET",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers.get("access-control-allow-origin"), "*")
+
     def test_admin_article_crud_and_public_visibility(self) -> None:
         login_response = self.client.post(
             "/api/auth/login",
